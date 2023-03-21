@@ -23,7 +23,7 @@ namespace System.Internals
     /// used directly by end users; it's only for internal use by the collections package.
     /// </summary>
     /// <remarks>
-    /// The Red-Black tree manages items of type T, and uses a IComparer&lt;T&gt; that
+    /// The Red-Black tree manages items of type T, and uses a <see cref="IComparer{T}"/> that
     /// compares items to sort the tree. Multiple items can compare equal and be stored
     /// in the tree. Insert, Delete, and Find operations are provided in their full generality;
     /// all operations allow dealing with either the first or last of items that compare equal. 
@@ -170,12 +170,12 @@ namespace System.Internals
         /// Initialize a red-black tree, using the given interface instance to compare elements. Only
         /// Compare is used on the IComparer interface.
         /// </summary>
-        /// <param name="comparer">The IComparer&lt;T&gt; used to sort keys.</param>
+        /// <param name="comparer">The <see cref="IComparer{T}"/> used to sort keys.</param>
         public RedBlackTree(IComparer<T> comparer)
         {
             this.comparer = comparer;
-            this.count = 0;
-            this.root = null;
+            count = 0;
+            root = null;
         }
 
         /// <summary>
@@ -198,10 +198,10 @@ namespace System.Internals
         {
             RedBlackTree<T> newTree = new(comparer)
             {
-                count = this.count
+                count = count
             };
-            if (this.root != null)
-                newTree.root = this.root.Clone();
+            if (root != null)
+                newTree.root = root.Clone();
             return newTree;
         }
 
@@ -276,7 +276,7 @@ namespace System.Internals
         /// <summary>
         /// Find the item at a particular index in the tree.
         /// </summary>
-        /// <param name="index">The zero-based index of the item. Must be &gt;= 0 and &lt; Count.</param>
+        /// <param name="index">The zero-based index of the item. Must be }= 0 and { Count.</param>
         /// <returns>The item at the particular index.</returns>
         public T GetItemByIndex(int index)
         {
@@ -735,7 +735,7 @@ namespace System.Internals
         /// a RangeTest delegate.
         /// </summary>
         /// <param name="rangeTester">Tests an item against the custom range.</param>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates the custom range in order.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the custom range in order.</returns>
         /// <exception cref="InvalidOperationException">The tree has an item added or deleted during the enumeration.</exception>
         public IEnumerable<T> EnumerateRange(RangeTester rangeTester)
         {
@@ -791,7 +791,7 @@ namespace System.Internals
         /// a RangeTest delegate.
         /// </summary>
         /// <param name="rangeTester">Tests an item against the custom range.</param>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates the custom range in reversed order.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the custom range in reversed order.</returns>
         /// <exception cref="InvalidOperationException">The tree has an item added or deleted during the enumeration.</exception>
         public IEnumerable<T> EnumerateRangeReversed(RangeTester rangeTester)
         {
@@ -1291,7 +1291,7 @@ namespace System.Internals
             {
                 Debug.Assert(!root.IsRed, "Root is not black");
                 int nodeCount = ValidateSubTree(root, out _);
-                Debug.Assert(nodeCount == this.count, "Node count of tree is not correct.");
+                Debug.Assert(nodeCount == count, "Node count of tree is not correct.");
             }
         }
 

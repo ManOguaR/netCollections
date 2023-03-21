@@ -12,7 +12,7 @@ namespace System.Internals
     /// does not handle duplicate values.
     /// </summary>
     /// <remarks>
-    /// The Hash manages items of type T, and uses a IComparer&lt;ItemTYpe&gt; that
+    /// The Hash manages items of type T, and uses a IComparer{ItemTYpe} that
     /// hashes compares items to hash items into the table.  
     ///</remarks>
     [Serializable]
@@ -118,7 +118,7 @@ namespace System.Internals
         public Hash(IEqualityComparer<T> equalityComparer)
         {
             this.equalityComparer = equalityComparer;
-            this.loadFactor = 0.70F;           // default load factor.
+            loadFactor = 0.70F;           // default load factor.
         }
 
         /// <summary>
@@ -565,7 +565,7 @@ namespace System.Internals
         /// Enumerate all of the items in the hash table. The items
         /// are enumerated in a haphazard, unpredictable order.
         /// </summary>
-        /// <returns>An IEnumerator&lt;T&gt; that enumerates the items
+        /// <returns>An <see cref="IEnumerator{T}"/> that enumerates the items
         /// in the hash table.</returns>
         public IEnumerator<T> GetEnumerator()
         {
@@ -605,14 +605,14 @@ namespace System.Internals
         {
             Hash<T> clone = new(equalityComparer)
             {
-                count = this.count,
-                usedSlots = this.usedSlots,
-                totalSlots = this.totalSlots,
-                loadFactor = this.loadFactor,
-                thresholdGrow = this.thresholdGrow,
-                thresholdShrink = this.thresholdShrink,
-                hashMask = this.hashMask,
-                secondaryShift = this.secondaryShift
+                count = count,
+                usedSlots = usedSlots,
+                totalSlots = totalSlots,
+                loadFactor = loadFactor,
+                thresholdGrow = thresholdGrow,
+                thresholdShrink = thresholdShrink,
+                hashMask = hashMask,
+                secondaryShift = secondaryShift
             };
             if (table != null)
             {
@@ -703,7 +703,7 @@ namespace System.Internals
         ///     Slot    4: C 4513e41e hello
         /// where the "C" indicates the collision bit is on
         /// the next hex number is the hash value
-        /// followed by ToString() on the item.
+        /// followed by <see cref="ToString()"/> on the item.
         /// </summary>
         internal void Print()
         {

@@ -4,9 +4,9 @@ namespace netCollections
 {
     /// <summary>
     /// ListBase is an abstract class that can be used as a base class for a read-write collection that needs 
-    /// to implement the generic IList&lt;T&gt; and non-generic IList collections. The derived class needs
+    /// to implement the generic <see cref="IList{T}"/> and non-generic IList collections. The derived class needs
     /// to override the following methods: Count, Clear, Insert, RemoveAt, and the indexer. The implementation
-    /// of all the other methods in IList&lt;T&gt; and IList are handled by ListBase.
+    /// of all the other methods in <see cref="IList{T}"/> and IList are handled by ListBase.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
@@ -71,7 +71,7 @@ namespace netCollections
         /// enumeration may cause incorrect enumeration or out of range
         /// exceptions. Consider overriding this method and adding checks
         /// for structural changes.</remarks>
-        /// <returns>An IEnumerator&lt;T&gt; that enumerates all the
+        /// <returns>An <see cref="IEnumerator{T}"/> that enumerates all the
         /// items in the list.</returns>
         public override IEnumerator<T> GetEnumerator()
         {
@@ -87,7 +87,7 @@ namespace netCollections
         /// The implementation simply checks whether IndexOf(item) returns a non-negative value.
         /// </summary>
         /// <remarks>Equality in the list is determined by the default sense of
-        /// equality for T. If T implements IComparable&lt;T&gt;, the
+        /// equality for T. If T implements <see cref="IComparable{T}"/>, the
         /// Equals method of that interface is used to determine equality. Otherwise, 
         /// Object.Equals is used to determine equality.</remarks>
         /// <param name="item">The item to search for.</param>
@@ -112,7 +112,7 @@ namespace netCollections
         /// If one is found, it is removed. Otherwise, the list is unchanged.
         /// </summary>
         /// <remarks>Equality in the list is determined by the default sense of
-        /// equality for T. If T implements IComparable&lt;T&gt;, the
+        /// equality for T. If T implements <see cref="IComparable{T}"/>, the
         /// Equals method of that interface is used to determine equality. Otherwise, 
         /// Object.Equals is used to determine equality.</remarks>
         /// <param name="item">The item to remove from the list.</param>
@@ -140,7 +140,7 @@ namespace netCollections
         /// that is greater than or equal to Count.</param>
         public virtual void CopyTo(T[] array)
         {
-            this.CopyTo(array, 0);
+            CopyTo(array, 0);
         }
 
         /// <summary>
@@ -159,12 +159,12 @@ namespace netCollections
         }
 
         /// <summary>
-        /// Provides a read-only view of this list. The returned IList&lt;T&gt; provides
+        /// Provides a read-only view of this list. The returned <see cref="IList{T}"/> provides
         /// a view of the list that prevents modifications to the list. Use the method to provide
         /// access to the list without allowing changes. Since the returned object is just a view,
         /// changes to the list will be reflected in the view.
         /// </summary>
-        /// <returns>An IList&lt;T&gt; that provides read-only access to the list.</returns>
+        /// <returns>An <see cref="IList{T}"/> that provides read-only access to the list.</returns>
         public virtual new IList<T> AsReadOnly()
         {
             return Algorithms.ReadOnly(this);
@@ -328,7 +328,7 @@ namespace netCollections
         /// Finds the index of the first item in the list that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search fror.</param>
         /// <returns>The index of the first item in the list that that is equal to <paramref name="item"/>.  If no item is equal
         /// to <paramref name="item"/>, -1 is returned.</returns>
@@ -342,7 +342,7 @@ namespace netCollections
         /// that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search fror.</param>
         /// <param name="index">The starting index of the range to check.</param>
         /// <returns>The index of the first item in the given range that that is equal to <paramref name="item"/>.  If no item is equal
@@ -362,7 +362,7 @@ namespace netCollections
         /// that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search fror.</param>
         /// <param name="index">The starting index of the range to check.</param>
         /// <param name="count">The number of items in range to check.</param>
@@ -382,7 +382,7 @@ namespace netCollections
         /// Finds the index of the last item in the list that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search fror.</param>
         /// <returns>The index of the last item in the list that that is equal to <paramref name="item"/>.  If no item is equal
         /// to <paramref name="item"/>, -1 is returned.</returns>
@@ -396,7 +396,7 @@ namespace netCollections
         /// of the list to <paramref name="index"/>, that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search fror.</param>
         /// <param name="index">The ending index of the range to check.</param>
         /// <returns>The index of the last item in the given range that that is equal to <paramref name="item"/>.  If no item is equal
@@ -413,7 +413,7 @@ namespace netCollections
         /// that is equal to <paramref name="item"/>. 
         /// </summary>
         /// <remarks>The default implementation of equality for type T is used in the search. This is the
-        /// equality defined by IComparable&lt;T&gt; or object.Equals.</remarks>
+        /// equality defined by <see cref="IComparable{T}"/> or <see cref="object.Equals"/>.</remarks>
         /// <param name="item">The item to search for.</param>
         /// <param name="index">The ending index of the range to check.</param>
         /// <param name="count">The number of items in range to check.</param>
@@ -431,7 +431,7 @@ namespace netCollections
 
         /// <summary>
         /// Returns a view onto a sub-range of this list. Items are not copied; the
-        /// returned IList&lt;T&gt; is simply a different view onto the same underlying items. Changes to this list
+        /// returned <see cref="IList{T}"/> is simply a different view onto the same underlying items. Changes to this list
         /// are reflected in the view, and vice versa. Insertions and deletions in the view change the size of the 
         /// view, but insertions and deletions in the underlying list do not.
         /// </summary>
@@ -493,7 +493,7 @@ namespace netCollections
         /// Determines if the list contains any item that compares equal to <paramref name="value"/>.
         /// </summary>
         /// <remarks>Equality in the list is determined by the default sense of
-        /// equality for T. If T implements IComparable&lt;T&gt;, the
+        /// equality for T. If T implements <see cref="IComparable{T}"/>, the
         /// Equals method of that interface is used to determine equality. Otherwise, 
         /// Object.Equals is used to determine equality.</remarks>
         /// <param name="value">The item to search for.</param>
@@ -510,7 +510,7 @@ namespace netCollections
         /// in the list, and returns the index of that item.
         /// </summary>
         /// <remarks>Equality in the list is determined by the default sense of
-        /// equality for T. If T implements IComparable&lt;T&gt;, the
+        /// equality for T. If T implements <see cref="IComparable{T}"/>, the
         /// Equals method of that interface is used to determine equality. Otherwise, 
         /// Object.Equals is used to determine equality.</remarks>
         /// <param name="value">The item to search for.</param>
@@ -551,7 +551,7 @@ namespace netCollections
 
         /// <summary>
         /// Returns whether the list is read only. This implementation returns the value
-        /// from ICollection&lt;T&gt;.IsReadOnly, which is by default, false.
+        /// from <see cref="ICollection{T}.IsReadOnly"/>, which is by default, false.
         /// </summary>
         /// <value>By default, false, indicating that the list is not read only.</value>
         bool IList.IsReadOnly
@@ -564,7 +564,7 @@ namespace netCollections
         /// If one is found, it is removed. Otherwise, the list is unchanged.
         /// </summary>
         /// <remarks>Equality in the list is determined by the default sense of
-        /// equality for T. If T implements IComparable&lt;T&gt;, the
+        /// equality for T. If T implements <see cref="IComparable{T}"/>, the
         /// Equals method of that interface is used to determine equality. Otherwise, 
         /// Object.Equals is used to determine equality.</remarks>
         /// <param name="value">The item to remove from the list.</param>

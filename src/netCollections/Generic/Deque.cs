@@ -268,7 +268,7 @@ namespace netCollections.Generic
         /// are added to or removed from the Deque during enumeration, the 
         /// enumeration ends with an InvalidOperationException.
         /// </summary>
-        /// <returns>An IEnumerator&lt;T&gt; that enumerates all the
+        /// <returns>An <see cref="IEnumerator{T}"/> that enumerates all the
         /// items in the list.</returns>
         /// <exception cref="InvalidOperationException">The Deque has an item added or deleted during the enumeration.</exception>
         public sealed override IEnumerator<T> GetEnumerator()
@@ -916,7 +916,7 @@ namespace netCollections.Generic
         /// <returns>A copy of the current deque.</returns>
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         /// <summary>

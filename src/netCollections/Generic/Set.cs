@@ -3,20 +3,20 @@
 namespace netCollections.Generic
 {
     /// <summary>
-    /// Set&lt;T&gt; is a collection that contains items of type T. 
+    /// <see cref="Set{T}"/> is a collection that contains items of type T. 
     /// The item are maintained in a haphazard, unpredictable order, and duplicate items are not allowed.
     /// </summary>
     /// <remarks>
-    /// <p>The items are compared in one of two ways. If T implements IComparable&lt;T&gt; 
+    /// <p>The items are compared in one of two ways. If T implements <see cref="IComparable{T}"/> 
     /// then the Equals method of that interface will be used to compare items, otherwise the Equals
-    /// method from Object will be used. Alternatively, an instance of IComparer&lt;T&gt; can be passed
+    /// method from Object will be used. Alternatively, an instance of <see cref="IComparer{T}"/> can be passed
     /// to the constructor to use to compare items.</p>
     /// <p>Set is implemented as a hash table. Inserting, deleting, and looking up an
     /// an element all are done in approximately constant time, regardless of the number of items in the Set.</p>
-    /// <p><see cref="OrderedSet&lt;T&gt;"/> is similar, but uses comparison instead of hashing, and does maintains
+    /// <p><see cref="<see cref="OrderedSet{T}"/> is similar, but uses comparison instead of hashing, and does maintains
     /// the items in sorted order.</p>
     ///</remarks>
-    ///<seealso cref="OrderedSet&lt;T&gt;"/>
+    ///<seealso cref="<see cref="OrderedSet{T}"/>
     [Serializable]
     public class Set<T> : CollectionBase<T>, ICollection<T>, ICloneable
     {
@@ -44,7 +44,7 @@ namespace netCollections.Generic
         /// Creates a new Set. The Equals and GetHashCode method of the passed comparer object
         /// will be used to compare items in this set.
         /// </summary>
-        /// <param name="equalityComparer">An instance of IEqualityComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="equalityComparer">An instance of <see cref="IEqualityComparer{T}"/> that will be used to compare items.</param>
         public Set(IEqualityComparer<T> equalityComparer)
         {
             this.equalityComparer = equalityComparer ?? throw new ArgumentNullException(nameof(equalityComparer));
@@ -70,7 +70,7 @@ namespace netCollections.Generic
         /// initialized with all the items in the given collection.
         /// </summary>
         /// <param name="collection">A collection with items to be placed into the Set.</param>
-        /// <param name="equalityComparer">An instance of IEqualityComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="equalityComparer">An instance of <see cref="IEqualityComparer{T}"/> that will be used to compare items.</param>
         public Set(IEnumerable<T> collection, IEqualityComparer<T> equalityComparer)
            : this(equalityComparer)
         {
@@ -102,7 +102,7 @@ namespace netCollections.Generic
         /// <returns>The cloned set.</returns>
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         /// <summary>
@@ -161,15 +161,15 @@ namespace netCollections.Generic
         #region Basic collection containment
 
         /// <summary>
-        /// Returns the IEqualityComparer&lt;T&gt; used to compare items in this set. 
+        /// Returns the <see cref="IEqualityComparer{T}"/> used to compare items in this set. 
         /// </summary>
         /// <value>If the set was created using a comparer, that comparer is returned. Otherwise
-        /// the default comparer for T (EqualityComparer&lt;T&gt;.Default) is returned.</value>
+        /// the default comparer for T (EqualityComparer{T}.Default) is returned.</value>
         public IEqualityComparer<T> Comparer
         {
             get
             {
-                return this.equalityComparer;
+                return equalityComparer;
             }
         }
 
@@ -226,7 +226,7 @@ namespace netCollections.Generic
         /// <example>
         /// In the following example, the set contains strings which are compared in a case-insensitive manner. 
         /// <code>
-        /// Set&lt;string&gt; set = new Set&lt;string&gt;(StringComparer.CurrentCultureIgnoreCase);
+        /// Set{string} set = new Set{string}(StringComparer.CurrentCultureIgnoreCase);
         /// set.Add("HELLO");
         /// string s;
         /// bool b = set.TryGetItem("Hello", out s);   // b receives true, s receives "HELLO".
@@ -398,13 +398,13 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
                 return false;     // Can't be a superset of a bigger set
 
             // Check each item in the other set to make sure it is in this set.
             foreach (T item in otherSet)
             {
-                if (!this.Contains(item))
+                if (!Contains(item))
                     return false;
             }
 
@@ -426,7 +426,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count >= this.Count)
+            if (otherSet.Count >= Count)
                 return false;     // Can't be a proper superset of a bigger or equal set
 
             return IsSupersetOf(otherSet);
@@ -475,13 +475,13 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherSet);
 
             // Must be the same size.
-            if (otherSet.Count != this.Count)
+            if (otherSet.Count != Count)
                 return false;
 
             // Check each item in the other set to make sure it is in this set.
             foreach (T item in otherSet)
             {
-                if (!this.Contains(item))
+                if (!Contains(item))
                     return false;
             }
 
@@ -502,7 +502,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
             Set<T> smaller, larger;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -559,7 +559,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
             Set<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -591,7 +591,7 @@ namespace netCollections.Generic
             hash.StopEnumerations();
 
             Set<T> smaller, larger;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -629,7 +629,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
             Set<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -667,11 +667,11 @@ namespace netCollections.Generic
 
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count < this.Count)
+            if (otherSet.Count < Count)
             {
                 foreach (T item in otherSet)
                 {
-                    this.Remove(item);
+                    Remove(item);
                 }
             }
             else
@@ -695,7 +695,7 @@ namespace netCollections.Generic
         public Set<T> Difference(Set<T> otherSet)
         {
             CheckConsistentComparison(otherSet);
-            Set<T> result = this.Clone();
+            Set<T> result = Clone();
             result.DifferenceWith(otherSet);
             return result;
         }
@@ -718,7 +718,7 @@ namespace netCollections.Generic
 
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 hash.StopEnumerations();
                 Hash<T> newHash = otherSet.hash.Clone(null);
@@ -730,16 +730,16 @@ namespace netCollections.Generic
                     else
                         newHash.Insert(item, true, out _);
                 }
-                this.hash = newHash;
+                hash = newHash;
             }
             else
             {
                 foreach (T item in otherSet)
                 {
-                    if (this.Contains(item))
-                        this.Remove(item);
+                    if (Contains(item))
+                        Remove(item);
                     else
-                        this.Add(item);
+                        Add(item);
                 }
             }
         }
@@ -760,7 +760,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherSet);
             Set<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }

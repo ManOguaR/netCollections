@@ -6,7 +6,7 @@ namespace netCollections
 {
     /// <summary>
     /// ReadOnlyDictionaryBase is a base class that can be used to more easily implement the
-    /// generic IDictionary&lt;T&gt; and non-generic IDictionary interfaces.
+    /// generic <see cref="IDictionary{T}"/> and non-generic IDictionary interfaces.
     /// </summary>
     /// <remarks>
     /// <para>To use ReadOnlyDictionaryBase as a base class, the derived class must override
@@ -25,7 +25,7 @@ namespace netCollections
         /// </summary>
         private void MethodModifiesCollection()
         {
-            throw new NotSupportedException(string.Format(Strings.CannotModifyCollection, Util.SimpleClassName(this.GetType())));
+            throw new NotSupportedException(string.Format(Strings.CannotModifyCollection, Util.SimpleClassName(GetType())));
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace netCollections
 
         /// <summary>
         /// Determines if a dictionary contains a given KeyValuePair. This implementation checks to see if the
-        /// dictionary contains the given key, and if the value associated with the key is equal to (via object.Equals)
+        /// dictionary contains the given key, and if the value associated with the key is equal to (via <see cref="object.Equals"/>)
         /// the value.
         /// </summary>
         /// <param name="item">A KeyValuePair containing the Key and Value to check for.</param>
@@ -249,7 +249,7 @@ namespace netCollections
         {
             // You can't implement this directly with an iterator, because iterators automatically implement
             // IEnumerator, not IDictionaryEnumerator. We use the helper class DictionaryEnumeratorWrapper.
-            return new DictionaryEnumeratorWrapper(this.GetEnumerator());
+            return new DictionaryEnumeratorWrapper(GetEnumerator());
         }
 
         /// <summary>
@@ -389,7 +389,7 @@ namespace netCollections
         #region Keys and Values collections
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TKey&gt; and ICollection for the
+        /// A private class that implements ICollection{TKey} and ICollection for the
         /// Keys collection. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -424,7 +424,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TKey&gt; and ICollection for the
+        /// A private class that implements ICollection{TKey} and ICollection for the
         /// Values collection. The collection is read-only.
         /// </summary>
         [Serializable]

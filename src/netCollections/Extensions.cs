@@ -13,7 +13,7 @@ namespace netCollections
     /// the standard generic collection interfaces such as <see cref="IEnumerable{T}"/>,
     /// <see cref="ICollection{T}"/> and <see cref="IList{T}"/>.
     /// </summary>
-    internal static class Algorithms
+    internal static class Extensions
     {
         #region Collection wrappers
 
@@ -136,7 +136,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> or <paramref name="count"/> is negative.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> + <paramref name="count"/> is greater than the
         /// size of <paramref name="list"/>.</exception>
-        public static IList<T> Range<T>(IList<T> list, int start, int count)
+        public static IList<T> Range<T>(this IList<T> list, int start, int count)
         {
             if (list == null)
                 throw new ArgumentOutOfRangeException(nameof(list));
@@ -258,7 +258,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> or <paramref name="count"/> is negative.</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> + <paramref name="count"/> is greater than the
         /// size of <paramref name="array"/>.</exception>
-        public static IList<T> Range<T>(T[] array, int start, int count)
+        public static IList<T> Range<T>(this T[] array, int start, int count)
         {
             if (array == null)
                 throw new ArgumentOutOfRangeException(nameof(array));
@@ -341,12 +341,9 @@ namespace netCollections
         /// <typeparam name="T">The type of items in the collection.</typeparam>
         /// <param name="collection">The collection to wrap.</param>
         /// <returns>A read-only view onto <paramref name="collection"/>. If <paramref name="collection"/> is null, then null is returned.</returns>
-        public static ICollection<T> ReadOnly<T>(ICollection<T> collection)
+        public static ICollection<T> AsReadOnly<T>(this ICollection<T> collection)
         {
-            if (collection == null)
-                return null;
-            else
-                return new ReadOnlyCollection<T>(collection);
+            return new ReadOnlyCollection<T>(collection);
         }
 
         /// <summary>
@@ -437,11 +434,9 @@ namespace netCollections
         /// <param name="list">The list to wrap.</param>
         /// <returns>A read-only view onto <paramref name="list"/>. Returns null if <paramref name="list"/> is null. 
         /// If <paramref name="list"/> is already read-only, returns <paramref name="list"/>.</returns>
-        public static IList<T> ReadOnly<T>(IList<T> list)
+        public static IList<T> AsReadOnly<T>(this IList<T> list)
         {
-            if (list == null)
-                return null;
-            else if (list.IsReadOnly)
+            if (list.IsReadOnly)
                 return list;
             else
                 return new ReadOnlyList<T>(list);
@@ -482,12 +477,12 @@ namespace netCollections
 
             public ICollection<TKey> Keys
             {
-                get { return ReadOnly(wrappedDictionary.Keys); }
+                get { return AsReadOnly(wrappedDictionary.Keys); }
             }
 
             public ICollection<TValue> Values
             {
-                get { return ReadOnly(wrappedDictionary.Values); }
+                get { return AsReadOnly(wrappedDictionary.Values); }
             }
 
             public bool Remove(TKey key)
@@ -551,11 +546,9 @@ namespace netCollections
         /// <param name="dictionary">The dictionary to wrap.</param>
         /// <returns>A read-only view onto <paramref name="dictionary"/>. Returns null if <paramref name="dictionary"/> is null. 
         /// If <paramref name="dictionary"/> is already read-only, returns <paramref name="dictionary"/>.</returns>
-        public static IDictionary<TKey, TValue> ReadOnly<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
+        public static IDictionary<TKey, TValue> AsReadOnly<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
         {
-            if (dictionary == null)
-                return null;
-            else if (dictionary.IsReadOnly)
+            if (dictionary.IsReadOnly)
                 return dictionary;
             else
                 return new ReadOnlyDictionary<TKey, TValue>(dictionary);
@@ -654,11 +647,9 @@ namespace netCollections
         /// items of type <typeparamref name="T"/> or a type derived from it. </param>
         /// <returns>A generic <see cref="IEnumerable{T}"/> wrapper around <paramref name="untypedCollection"/>. 
         /// If <paramref name="untypedCollection"/> is null, then null is returned.</returns>
-        public static IEnumerable<T> TypedAs<T>(IEnumerable untypedCollection)
+        public static IEnumerable<T> TypedAs<T>(this IEnumerable untypedCollection)
         {
-            if (untypedCollection == null)
-                return null;
-            else if (untypedCollection is IEnumerable<T>)
+            if (untypedCollection is IEnumerable<T>)
                 return (IEnumerable<T>)untypedCollection;
             else
                 return new TypedEnumerable<T>(untypedCollection);
@@ -751,11 +742,9 @@ namespace netCollections
         /// items of type <typeparamref  name="T"/> or a type derived from it. </param>
         /// <returns>A generic <see cref="ICollection{T}"/> wrapper around <paramref name="untypedCollection"/>.
         /// If <paramref name="untypedCollection"/> is null, then null is returned.</returns>
-        public static ICollection<T> TypedAs<T>(ICollection untypedCollection)
+        public static ICollection<T> TypedAs<T>(this ICollection untypedCollection)
         {
-            if (untypedCollection == null)
-                return null;
-            else if (untypedCollection is ICollection<T>)
+            if (untypedCollection is ICollection<T>)
                 return (ICollection<T>)untypedCollection;
             else
                 return new TypedCollection<T>(untypedCollection);
@@ -854,11 +843,9 @@ namespace netCollections
         /// items of type <typeparamref name="T"/> or a type derived from it. </param>
         /// <returns>A generic <see cref="IList{T}"/> wrapper around <paramref name="untypedList"/>.
         /// If <paramref name="untypedList"/> is null, then null is returned.</returns>
-        public static IList<T> TypedAs<T>(IList untypedList)
+        public static IList<T> TypedAs<T>(this IList untypedList)
         {
-            if (untypedList == null)
-                return null;
-            else if (untypedList is IList<T>)
+            if (untypedList is IList<T>)
                 return (IList<T>)untypedList;
             else
                 return new TypedList<T>(untypedList);
@@ -940,11 +927,9 @@ namespace netCollections
         /// <param name="typedCollection">A typed collection to wrap.</param>
         /// <returns>A non-generic ICollection wrapper around <paramref name="typedCollection"/>.
         /// If <paramref name="typedCollection"/> is null, then null is returned.</returns>
-        public static ICollection Untyped<T>(ICollection<T> typedCollection)
+        public static ICollection Untyped<T>(this ICollection<T> typedCollection)
         {
-            if (typedCollection == null)
-                return null;
-            else if (typedCollection is ICollection)
+            if (typedCollection is ICollection)
                 return (ICollection)typedCollection;
             else
                 return new UntypedCollection<T>(typedCollection);
@@ -1098,11 +1083,9 @@ namespace netCollections
         /// <param name="typedList">A typed list to wrap.</param>
         /// <returns>A non-generic IList wrapper around <paramref name="typedList"/>.
         /// If <paramref name="typedList"/> is null, then null is returned.</returns>
-        public static IList Untyped<T>(IList<T> typedList)
+        public static IList Untyped<T>(this IList<T> typedList)
         {
-            if (typedList == null)
-                return null;
-            else if (typedList is IList)
+            if (typedList is IList)
                 return (IList)typedList;
             else
                 return new UntypedList<T>(typedList);
@@ -1232,11 +1215,8 @@ namespace netCollections
         /// the list causes all the items to be replaced with a default value.</remarks>
         /// <param name="array">The array to wrap.</param>
         /// <returns>An <see cref="IList{T}"/> wrapper onto <paramref name="array"/>.</returns>
-        public static IList<T> ReadWriteList<T>(T[] array)
+        public static IList<T> AsReadWriteList<T>(this T[] array)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
-
             return new ArrayWrapper<T>(array);
         }
 
@@ -1254,7 +1234,7 @@ namespace netCollections
         /// <param name="replaceWith">The new value to replace with.</param>
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with the appropriate replacements made.</returns>
-        public static IEnumerable<T> Replace<T>(IEnumerable<T> collection, T itemFind, T replaceWith)
+        public static IEnumerable<T> Replace<T>(this IEnumerable<T> collection, T itemFind, T replaceWith)
         {
             return Replace(collection, itemFind, replaceWith, EqualityComparer<T>.Default);
         }
@@ -1269,7 +1249,7 @@ namespace netCollections
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with the appropriate replacements made.</returns>
-        public static IEnumerable<T> Replace<T>(IEnumerable<T> collection, T itemFind, T replaceWith, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> Replace<T>(this IEnumerable<T> collection, T itemFind, T replaceWith, IEqualityComparer<T> equalityComparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1294,7 +1274,7 @@ namespace netCollections
         /// <param name="replaceWith">The new value to replace with.</param>
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with the appropriate replacements made.</returns>
-        public static IEnumerable<T> Replace<T>(IEnumerable<T> collection, Predicate<T> predicate, T replaceWith)
+        public static IEnumerable<T> Replace<T>(this IEnumerable<T> collection, Predicate<T> predicate, T replaceWith)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1321,7 +1301,7 @@ namespace netCollections
         /// <param name="list">The list or array to process.</param>
         /// <param name="itemFind">The value to find and replace within <paramtype name="T"/>.</param>
         /// <param name="replaceWith">The new value to replace with.</param>
-        public static void ReplaceInPlace<T>(IList<T> list, T itemFind, T replaceWith)
+        public static void ReplaceInPlace<T>(this IList<T> list, T itemFind, T replaceWith)
         {
             ReplaceInPlace(list, itemFind, replaceWith, EqualityComparer<T>.Default);
         }
@@ -1337,7 +1317,7 @@ namespace netCollections
         /// <param name="itemFind">The value to find and replace within <paramtype name="T"/>.</param>
         /// <param name="replaceWith">The new value to replace with.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
-        public static void ReplaceInPlace<T>(IList<T> list, T itemFind, T replaceWith, IEqualityComparer<T> equalityComparer)
+        public static void ReplaceInPlace<T>(this IList<T> list, T itemFind, T replaceWith, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1366,7 +1346,7 @@ namespace netCollections
         /// <param name="predicate">The predicate used to evaluate items with the collection. If the predicate returns true for a particular
         /// item, the item is replaces with <paramref name="replaceWith"/>.</param>
         /// <param name="replaceWith">The new value to replace with.</param>
-        public static void ReplaceInPlace<T>(IList<T> list, Predicate<T> predicate, T replaceWith)
+        public static void ReplaceInPlace<T>(this IList<T> list, Predicate<T> predicate, T replaceWith)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1399,7 +1379,7 @@ namespace netCollections
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with consecutive duplicates removed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        public static IEnumerable<T> RemoveDuplicates<T>(IEnumerable<T> collection)
+        public static IEnumerable<T> RemoveDuplicates<T>(this IEnumerable<T> collection)
         {
             return RemoveDuplicates(collection, EqualityComparer<T>.Default);
         }
@@ -1414,7 +1394,7 @@ namespace netCollections
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with consecutive duplicates removed.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="equalityComparer"/> is null.</exception>
-        public static IEnumerable<T> RemoveDuplicates<T>(IEnumerable<T> collection, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> RemoveDuplicates<T>(this IEnumerable<T> collection, IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -1434,7 +1414,7 @@ namespace netCollections
         /// <c>first</c> is the first item in the group of "duplicate" items.</param>
         /// <returns>An new collection with the items from <paramref name="collection"/>, in the same order, 
         /// with consecutive "duplicates" removed.</returns>
-        public static IEnumerable<T> RemoveDuplicates<T>(IEnumerable<T> collection, BinaryPredicate<T> predicate)
+        public static IEnumerable<T> RemoveDuplicates<T>(this IEnumerable<T> collection, BinaryPredicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1467,7 +1447,7 @@ namespace netCollections
         /// <para>Although arrays cast to <see cref="IList{T}"/> are normally read-only, this method
         /// will work correctly and modify an array passed as <paramref name="list"/>.</para></remarks>
         /// <param name="list">The list or array to process.</param>
-        public static void RemoveDuplicatesInPlace<T>(IList<T> list)
+        public static void RemoveDuplicatesInPlace<T>(this IList<T> list)
         {
             RemoveDuplicatesInPlace(list, EqualityComparer<T>.Default);
         }
@@ -1482,7 +1462,7 @@ namespace netCollections
         /// will work correctly and modify an array passed as <paramref name="list"/>.</remarks>
         /// <param name="list">The list or array to process.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
-        public static void RemoveDuplicatesInPlace<T>(IList<T> list, IEqualityComparer<T> equalityComparer)
+        public static void RemoveDuplicatesInPlace<T>(this IList<T> list, IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -1501,7 +1481,7 @@ namespace netCollections
         /// will work correctly and modify an array passed as <paramref name="list"/>.</para></remarks>
         /// <param name="list">The list or array to process.</param>
         /// <param name="predicate">The BinaryPredicate used to compare items for "equality". </param>
-        public static void RemoveDuplicatesInPlace<T>(IList<T> list, BinaryPredicate<T> predicate)
+        public static void RemoveDuplicatesInPlace<T>(this IList<T> list, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1563,7 +1543,7 @@ namespace netCollections
         /// <param name="list">The list to examine.</param>
         /// <param name="count">The number of consecutive equal items to look for. The count must be at least 1.</param>
         /// <returns>The index of the first item in the first run of <paramref name="count"/> consecutive equal items, or -1 if no such run exists..</returns>
-        public static int FirstConsecutiveEqual<T>(IList<T> list, int count)
+        public static int FirstConsecutiveEqual<T>(this IList<T> list, int count)
         {
             return FirstConsecutiveEqual(list, count, EqualityComparer<T>.Default);
         }
@@ -1576,7 +1556,7 @@ namespace netCollections
         /// <param name="count">The number of consecutive equal items to look for. The count must be at least 1.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>The index of the first item in the first run of <paramref name="count"/> consecutive equal items, or -1 if no such run exists.</returns>
-        public static int FirstConsecutiveEqual<T>(IList<T> list, int count, IEqualityComparer<T> equalityComparer)
+        public static int FirstConsecutiveEqual<T>(this IList<T> list, int count, IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -1593,7 +1573,7 @@ namespace netCollections
         /// <param name="count">The number of consecutive equal items to look for. The count must be at least 1.</param>
         /// <param name="predicate">The BinaryPredicate used to compare items for "equality". </param>
         /// <returns>The index of the first item in the first run of <paramref name="count"/> consecutive equal items, or -1 if no such run exists.</returns>
-        public static int FirstConsecutiveEqual<T>(IList<T> list, int count, BinaryPredicate<T> predicate)
+        public static int FirstConsecutiveEqual<T>(this IList<T> list, int count, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1643,7 +1623,7 @@ namespace netCollections
         /// <param name="predicate">The predicate used to test each item.</param>
         /// <returns>The index of the first item in the first run of <paramref name="count"/> items where <paramref name="predicate"/>
         /// returns true for all items in the run, or -1 if no such run exists.</returns>
-        public static int FirstConsecutiveWhere<T>(IList<T> list, int count, Predicate<T> predicate)
+        public static int FirstConsecutiveWhere<T>(this IList<T> list, int count, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1699,7 +1679,7 @@ namespace netCollections
         /// <returns>The first item in the collection that matches the condition, or the default value for T (0 or null) if no
         /// item that matches the condition is found.</returns>
         /// <seealso cref="Algorithms.TryFindFirstWhere{T}"/>
-        public static T FindFirstWhere<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static T FindFirstWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (TryFindFirstWhere(collection, predicate, out T retval))
                 return retval;
@@ -1716,7 +1696,7 @@ namespace netCollections
         /// <param name="foundItem">Outputs the first item in the collection that matches the condition, if the method returns true.</param>
         /// <returns>True if an item satisfying the condition was found. False if no such item exists in the collection.</returns>
         /// <seealso cref="FindFirstWhere{T}"/>
-        public static bool TryFindFirstWhere<T>(IEnumerable<T> collection, Predicate<T> predicate, out T foundItem)
+        public static bool TryFindFirstWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate, out T foundItem)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1752,7 +1732,7 @@ namespace netCollections
         /// <returns>The last item in the collection that matches the condition, or the default value for T (0 or null) if no
         /// item that matches the condition is found.</returns>
         /// <seealso cref="TryFindLastWhere{T}"/>
-        public static T FindLastWhere<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static T FindLastWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (TryFindLastWhere(collection, predicate, out T retval))
                 return retval;
@@ -1771,7 +1751,7 @@ namespace netCollections
         /// <param name="foundItem">Outputs the last item in the collection that matches the condition, if the method returns true.</param>
         /// <returns>True if an item satisfying the condition was found. False if no such item exists in the collection.</returns>
         /// <seealso cref="FindLastWhere{T}"/>
-        public static bool TryFindLastWhere<T>(IEnumerable<T> collection, Predicate<T> predicate, out T foundItem)
+        public static bool TryFindLastWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate, out T foundItem)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1822,7 +1802,7 @@ namespace netCollections
         /// <param name="collection">The collection to check all the items in.</param>
         /// <param name="predicate">A delegate that defines the condition to check for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the items that satisfy the condition.</returns>
-        public static IEnumerable<T> FindWhere<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static IEnumerable<T> FindWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -1845,7 +1825,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="predicate">A delegate that defined the condition to check for.</param>
         /// <returns>The index of the first item satisfying the condition. -1 if no such item exists in the list.</returns>
-        public static int FindFirstIndexWhere<T>(IList<T> list, Predicate<T> predicate)
+        public static int FindFirstIndexWhere<T>(this IList<T> list, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1873,7 +1853,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="predicate">A delegate that defined the condition to check for.</param>
         /// <returns>The index of the last item satisfying the condition. -1 if no such item exists in the list.</returns>
-        public static int FindLastIndexWhere<T>(IList<T> list, Predicate<T> predicate)
+        public static int FindLastIndexWhere<T>(this IList<T> list, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1899,7 +1879,7 @@ namespace netCollections
         /// <param name="list">The list to check all the items in.</param>
         /// <param name="predicate">A delegate that defines the condition to check for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items that satisfy the condition.</returns>
-        public static IEnumerable<int> FindIndicesWhere<T>(IList<T> list, Predicate<T> predicate)
+        public static IEnumerable<int> FindIndicesWhere<T>(this IList<T> list, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1925,7 +1905,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="item">The item to search for.</param>
         /// <returns>The index of the first item equal to <paramref name="item"/>. -1 if no such item exists in the list.</returns>
-        public static int FirstIndexOf<T>(IList<T> list, T item)
+        public static int FirstIndexOf<T>(this IList<T> list, T item)
         {
             return FirstIndexOf(list, item, EqualityComparer<T>.Default);
         }
@@ -1938,7 +1918,7 @@ namespace netCollections
         /// <param name="item">The item to search for.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>The index of the first item equal to <paramref name="item"/>. -1 if no such item exists in the list.</returns>
-        public static int FirstIndexOf<T>(IList<T> list, T item, IEqualityComparer<T> equalityComparer)
+        public static int FirstIndexOf<T>(this IList<T> list, T item, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -1967,7 +1947,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="item">The item to search for.</param>
         /// <returns>The index of the last item equal to <paramref name="item"/>. -1 if no such item exists in the list.</returns>
-        public static int LastIndexOf<T>(IList<T> list, T item)
+        public static int LastIndexOf<T>(this IList<T> list, T item)
         {
             return LastIndexOf(list, item, EqualityComparer<T>.Default);
         }
@@ -1980,7 +1960,7 @@ namespace netCollections
         /// <param name="item">The item to search for.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>The index of the last item equal to <paramref name="item"/>. -1 if no such item exists in the list.</returns>
-        public static int LastIndexOf<T>(IList<T> list, T item, IEqualityComparer<T> equalityComparer)
+        public static int LastIndexOf<T>(this IList<T> list, T item, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2007,7 +1987,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="item">The item to search for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items equal to <paramref name="item"/>. </returns>
-        public static IEnumerable<int> IndicesOf<T>(IList<T> list, T item)
+        public static IEnumerable<int> IndicesOf<T>(this IList<T> list, T item)
         {
             return IndicesOf(list, item, EqualityComparer<T>.Default);
         }
@@ -2020,7 +2000,7 @@ namespace netCollections
         /// <param name="item">The item to search for.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items equal to <paramref name="item"/>. </returns>
-        public static IEnumerable<int> IndicesOf<T>(IList<T> list, T item, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<int> IndicesOf<T>(this IList<T> list, T item, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2047,7 +2027,7 @@ namespace netCollections
         /// <param name="itemsToLookFor">The items to search for.</param>
         /// <returns>The index of the first item equal to any of the items in the collection <paramref name="itemsToLookFor"/>. 
         /// -1 if no such item exists in the list.</returns>
-        public static int FirstIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor)
+        public static int FirstIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor)
         {
             return FirstIndexOfMany(list, itemsToLookFor, EqualityComparer<T>.Default);
         }
@@ -2062,7 +2042,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode methods will be called.</param>
         /// <returns>The index of the first item equal to any of the items in the collection <paramref name="itemsToLookFor"/>. 
         /// -1 if no such item exists in the list.</returns>
-        public static int FirstIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
+        public static int FirstIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2101,7 +2081,7 @@ namespace netCollections
         /// <returns>The index of the first item "equal" to any of the items in the collection <paramref name="itemsToLookFor"/>, using 
         /// <paramtype name="BinaryPredicate{T}"/> as the test for equality. 
         /// -1 if no such item exists in the list.</returns>
-        public static int FirstIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
+        public static int FirstIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2138,7 +2118,7 @@ namespace netCollections
         /// <param name="itemsToLookFor">The items to search for.</param>
         /// <returns>The index of the last item equal to any of the items in the collection <paramref name="itemsToLookFor"/>. 
         /// -1 if no such item exists in the list.</returns>
-        public static int LastIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor)
+        public static int LastIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor)
         {
             return LastIndexOfMany(list, itemsToLookFor, EqualityComparer<T>.Default);
         }
@@ -2152,7 +2132,7 @@ namespace netCollections
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality.</param>
         /// <returns>The index of the last item equal to any of the items in the collection <paramref name="itemsToLookFor"/>. 
         /// -1 if no such item exists in the list.</returns>
-        public static int LastIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
+        public static int LastIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2189,7 +2169,7 @@ namespace netCollections
         /// <returns>The index of the last item "equal" to any of the items in the collection <paramref name="itemsToLookFor"/>, using 
         /// <paramtype name="BinaryPredicate"/> as the test for equality. 
         /// -1 if no such item exists in the list.</returns>
-        public static int LastIndexOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
+        public static int LastIndexOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2223,7 +2203,7 @@ namespace netCollections
         /// <param name="itemsToLookFor">A collection of items to search for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items equal to
         /// any of the items in the collection <paramref name="itemsToLookFor"/>. </returns>
-        public static IEnumerable<int> IndicesOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor)
+        public static IEnumerable<int> IndicesOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor)
         {
             return IndicesOfMany(list, itemsToLookFor, EqualityComparer<T>.Default);
         }
@@ -2237,7 +2217,7 @@ namespace netCollections
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. </param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items equal to
         /// any of the items in the collection <paramref name="itemsToLookFor"/>. </returns>
-        public static IEnumerable<int> IndicesOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<int> IndicesOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, IEqualityComparer<T> equalityComparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2273,7 +2253,7 @@ namespace netCollections
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the indices of items "equal" to any of the items 
         /// in the collection <paramref name="itemsToLookFor"/>, using 
         /// <paramtest name="BinaryPredicate"/> as the test for equality. </returns>
-        public static IEnumerable<int> IndicesOfMany<T>(IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
+        public static IEnumerable<int> IndicesOfMany<T>(this IList<T> list, IEnumerable<T> itemsToLookFor, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2310,7 +2290,7 @@ namespace netCollections
         /// <param name="list">The list to search.</param>
         /// <param name="pattern">The sequence of items to search for.</param>
         /// <returns>The first index with <paramref name="list"/> that matches the items in <paramref name="pattern"/>.</returns>
-        public static int SearchForSubsequence<T>(IList<T> list, IEnumerable<T> pattern)
+        public static int SearchForSubsequence<T>(this IList<T> list, IEnumerable<T> pattern)
         {
             return SearchForSubsequence(list, pattern, EqualityComparer<T>.Default);
         }
@@ -2329,7 +2309,7 @@ namespace netCollections
         /// <param name="pattern">The sequence of items to search for.</param>
         /// <param name="predicate">The BinaryPredicate used to compare items for "equality". </param>
         /// <returns>The first index with <paramref name="list"/> that matches the items in <paramref name="pattern"/>.</returns>
-        public static int SearchForSubsequence<T>(IList<T> list, IEnumerable<T> pattern, BinaryPredicate<T> predicate)
+        public static int SearchForSubsequence<T>(this IList<T> list, IEnumerable<T> pattern, BinaryPredicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -2378,7 +2358,7 @@ namespace netCollections
         /// <param name="pattern">The sequence of items to search for.</param>
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality. Only the Equals method will be called.</param>
         /// <returns>The first index with <paramref name="list"/> that matches the items in <paramref name="pattern"/>.</returns>
-        public static int SearchForSubsequence<T>(IList<T> list, IEnumerable<T> pattern, IEqualityComparer<T> equalityComparer)
+        public static int SearchForSubsequence<T>(this IList<T> list, IEnumerable<T> pattern, IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -2405,7 +2385,7 @@ namespace netCollections
         /// <param name="collection2">The second collection.</param>
         /// <returns>True if <paramref name="collection1"/> is a subset of <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool IsSubsetOf<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static bool IsSubsetOf<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return IsSubsetOf(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2424,7 +2404,7 @@ namespace netCollections
         /// <param name="equalityComparer">The <see cref="IEqualityComparer{T}"/> used to compare items for equality.</param>
         /// <returns>True if <paramref name="collection1"/> is a subset of <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool IsSubsetOf<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static bool IsSubsetOf<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2454,7 +2434,7 @@ namespace netCollections
         /// <param name="collection2">The second collection.</param>
         /// <returns>True if <paramref name="collection1"/> is a subset of <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool IsProperSubsetOf<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static bool IsProperSubsetOf<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return IsProperSubsetOf(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2475,7 +2455,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>True if <paramref name="collection1"/> is a proper subset of <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool IsProperSubsetOf<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static bool IsProperSubsetOf<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2505,7 +2485,7 @@ namespace netCollections
         /// <param name="collection2">The second collection.</param>
         /// <returns>True if <paramref name="collection1"/> are <paramref name="collection2"/> are disjoint, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool DisjointSets<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static bool DisjointSets<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return DisjointSets(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2524,7 +2504,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>True if <paramref name="collection1"/> are <paramref name="collection2"/> are disjoint, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool DisjointSets<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static bool DisjointSets<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2558,7 +2538,7 @@ namespace netCollections
         /// <param name="collection2">The second collection.</param>
         /// <returns>True if <paramref name="collection1"/> are <paramref name="collection2"/> are equal, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool EqualSets<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static bool EqualSets<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return EqualSets(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2577,7 +2557,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>True if <paramref name="collection1"/> are <paramref name="collection2"/> are equal, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static bool EqualSets<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static bool EqualSets<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2611,7 +2591,7 @@ namespace netCollections
         /// <param name="collection2">The second collection to intersect.</param>
         /// <returns>The intersection of the two collections, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetIntersection<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static IEnumerable<T> SetIntersection<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return SetIntersection(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2636,7 +2616,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>The intersection of the two collections, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetIntersection<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> SetIntersection<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2670,7 +2650,7 @@ namespace netCollections
         /// <param name="collection2">The second collection to union.</param>
         /// <returns>The union of the two collections, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetUnion<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static IEnumerable<T> SetUnion<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return SetUnion(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2695,7 +2675,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>The union of the two collections, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetUnion<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> SetUnion<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2738,7 +2718,7 @@ namespace netCollections
         /// <param name="collection2">The second collection to difference.</param>
         /// <returns>The difference of <paramref name="collection1"/> and <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetDifference<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static IEnumerable<T> SetDifference<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return SetDifference(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2763,7 +2743,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>The difference of <paramref name="collection1"/> and <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetDifference<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> SetDifference<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2798,7 +2778,7 @@ namespace netCollections
         /// <param name="collection2">The second collection to symmetric difference.</param>
         /// <returns>The symmetric difference of <paramref name="collection1"/> and <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetSymmetricDifference<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static IEnumerable<T> SetSymmetricDifference<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return SetSymmetricDifference(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -2823,7 +2803,7 @@ namespace netCollections
         /// Only the Equals and GetHashCode member functions of this interface are called.</param>
         /// <returns>The symmetric difference of <paramref name="collection1"/> and <paramref name="collection2"/>, considered as sets.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/> or <paramref name="collection2"/> is null.</exception>
-        public static IEnumerable<T> SetSymmetricDifference<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static IEnumerable<T> SetSymmetricDifference<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -2856,7 +2836,7 @@ namespace netCollections
         /// <param name="first">The first collection.</param>
         /// <param name="second">The second collection.</param>
         /// <returns>An IEnumerable{Pair{TFirst, TSecond}} that enumerates the cartesian product of the two collections.</returns>
-        public static IEnumerable<Pair<TFirst, TSecond>> CartesianProduct<TFirst, TSecond>(IEnumerable<TFirst> first, IEnumerable<TSecond> second)
+        public static IEnumerable<Pair<TFirst, TSecond>> CartesianProduct<TFirst, TSecond>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second)
         {
             if (first == null)
                 throw new ArgumentNullException(nameof(first));
@@ -2881,7 +2861,7 @@ namespace netCollections
         /// </summary>
         /// <param name="collection">A collection to get the string representation of.</param>
         /// <returns>The string representation of the collection. If <paramref name="collection"/> is null, then the string "null" is returned.</returns>
-        public static string ToString<T>(IEnumerable<T> collection)
+        public static string ToString<T>(this IEnumerable<T> collection)
         {
             return ToString(collection, true, "{", ",", "}");
         }
@@ -2901,7 +2881,7 @@ namespace netCollections
         /// <returns>The string representation of the collection. If <paramref name="collection"/> is null, then the string "null" is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="start"/>, <paramref name="separator"/>, or <paramref name="end"/>
         ///  is null.</exception>
-        public static string ToString<T>(IEnumerable<T> collection, bool recursive, string start, string separator, string end)
+        public static string ToString<T>(this IEnumerable<T> collection, bool recursive, string start, string separator, string end)
         {
             if (start == null)
                 throw new ArgumentNullException(nameof(start));
@@ -2950,7 +2930,7 @@ namespace netCollections
         /// <param name="dictionary">A dictionary to get the string representation of.</param>
         /// <returns>The string representation of the collection, or "null" 
         /// if <paramref name="dictionary"/> is null.</returns>
-        public static string ToString<TKey, TValue>(IDictionary<TKey, TValue> dictionary)
+        public static string ToString<TKey, TValue>(this IDictionary<TKey, TValue> dictionary)
         {
             bool firstItem = true;
 
@@ -3016,7 +2996,7 @@ namespace netCollections
         /// <typeparam name="T">The type of the items in the collection.</typeparam>
         /// <param name="collection">The collection to shuffle.</param>
         /// <returns>An array with the same size and items as <paramref name="collection"/>, but the items in a randomly chosen order.</returns>
-        public static T[] RandomShuffle<T>(IEnumerable<T> collection)
+        public static T[] RandomShuffle<T>(this IEnumerable<T> collection)
         {
             return RandomShuffle(collection, GetRandomGenerator());
         }
@@ -3028,7 +3008,7 @@ namespace netCollections
         /// <param name="collection">The collection to shuffle.</param>
         /// <param name="randomGenerator">The random number generator to use to select the random order.</param>
         /// <returns>An array with the same size and items as <paramref name="collection"/>, but the items in a randomly chosen order.</returns>
-        public static T[] RandomShuffle<T>(IEnumerable<T> collection, Randomizer randomGenerator)
+        public static T[] RandomShuffle<T>(this IEnumerable<T> collection, Randomizer randomGenerator)
         {
             // We have to copy all items anyway, and there isn't a way to produce the items
             // on the fly that is linear. So copying to an array and shuffling it is an efficient as we can get.
@@ -3058,7 +3038,7 @@ namespace netCollections
         /// <remarks>Although arrays cast to <see cref="IList{T}"/> are normally read-only, this method
         /// will work correctly and modify an array passed as <paramref name="list"/>.</remarks>
         /// <param name="list">The list or array to shuffle.</param>
-        public static void RandomShuffleInPlace<T>(IList<T> list)
+        public static void RandomShuffleInPlace<T>(this IList<T> list)
         {
             RandomShuffleInPlace(list, GetRandomGenerator());
         }
@@ -3070,7 +3050,7 @@ namespace netCollections
         /// will work correctly and modify an array passed as <paramref name="list"/>.</remarks>
         /// <param name="list">The list or array to shuffle.</param>
         /// <param name="randomGenerator">The random number generator to use to select the random order.</param>
-        public static void RandomShuffleInPlace<T>(IList<T> list, Randomizer randomGenerator)
+        public static void RandomShuffleInPlace<T>(this IList<T> list, Randomizer randomGenerator)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -3103,7 +3083,7 @@ namespace netCollections
         /// <param name="count">The number of items in the subset to choose.</param>
         /// <returns>An array of <paramref name="count"/> items, selected at random from <paramref name="collection"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative or greater than <paramref name="collection"/>.Count.</exception>
-        public static T[] RandomSubset<T>(IEnumerable<T> collection, int count)
+        public static T[] RandomSubset<T>(this IEnumerable<T> collection, int count)
         {
             return RandomSubset(collection, count, GetRandomGenerator());
         }
@@ -3121,7 +3101,7 @@ namespace netCollections
         /// <returns>An array of <paramref name="count"/> items, selected at random from <paramref name="collection"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative or greater than <paramref name="collection"/>.Count.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="randomGenerator"/> is null.</exception>
-        public static T[] RandomSubset<T>(IEnumerable<T> collection, int count, Randomizer randomGenerator)
+        public static T[] RandomSubset<T>(this IEnumerable<T> collection, int count, Randomizer randomGenerator)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -3177,7 +3157,7 @@ namespace netCollections
         /// items in <paramref name="collection"/>. Each permutations is returned as an array. The items in the array
         /// should be copied if they need to be used after the next permutation is generated; each permutation may
         /// reuse the same array instance.</returns>
-        public static IEnumerable<T[]> GeneratePermutations<T>(IEnumerable<T> collection)
+        public static IEnumerable<T[]> GeneratePermutations<T>(this IEnumerable<T> collection)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -3247,7 +3227,7 @@ namespace netCollections
         /// items in <paramref name="collection"/>. Each permutations is returned as an array. The items in the array
         /// should be copied if they need to be used after the next permutation is generated; each permutation may
         /// reuse the same array instance.</returns>
-        public static IEnumerable<T[]> GenerateSortedPermutations<T>(IEnumerable<T> collection)
+        public static IEnumerable<T[]> GenerateSortedPermutations<T>(this IEnumerable<T> collection)
             where T : IComparable<T>
         {
             return GenerateSortedPermutations(collection, Comparer<T>.Default);
@@ -3267,7 +3247,7 @@ namespace netCollections
         /// items in <paramref name="collection"/>. Each permutations is returned as an array. The items in the array
         /// should be copied if they need to be used after the next permutation is generated; each permutation may
         /// reuse the same array instance.</returns>
-        public static IEnumerable<T[]> GenerateSortedPermutations<T>(IEnumerable<T> collection, IComparer<T> comparer)
+        public static IEnumerable<T[]> GenerateSortedPermutations<T>(this IEnumerable<T> collection, IComparer<T> comparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -3340,7 +3320,7 @@ namespace netCollections
         /// items in <paramref name="collection"/>. Each permutations is returned as an array. The items in the array
         /// should be copied if they need to be used after the next permutation is generated; each permutation may
         /// reuse the same array instance.</returns>
-        public static IEnumerable<T[]> GenerateSortedPermutations<T>(IEnumerable<T> collection, Comparison<T> comparison)
+        public static IEnumerable<T[]> GenerateSortedPermutations<T>(this IEnumerable<T> collection, Comparison<T> comparison)
         {
             return GenerateSortedPermutations(collection, Comparers.ComparerFromComparison(comparison));
         }
@@ -3359,7 +3339,7 @@ namespace netCollections
         /// <returns>The largest item in the collection. </returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        public static T Maximum<T>(IEnumerable<T> collection)
+        public static T Maximum<T>(this IEnumerable<T> collection)
             where T : IComparable<T>
         {
             return Maximum(collection, Comparer<T>.Default);
@@ -3375,7 +3355,7 @@ namespace netCollections
         /// <returns>The largest item in the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="comparer"/> is null.</exception>
-        public static T Maximum<T>(IEnumerable<T> collection, IComparer<T> comparer)
+        public static T Maximum<T>(this IEnumerable<T> collection, IComparer<T> comparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -3413,7 +3393,7 @@ namespace netCollections
         /// <returns>The largest item in the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="comparison"/> is null.</exception>
-        public static T Maximum<T>(IEnumerable<T> collection, Comparison<T> comparison)
+        public static T Maximum<T>(this IEnumerable<T> collection, Comparison<T> comparison)
         {
             return Maximum(collection, Comparers.ComparerFromComparison(comparison));
         }
@@ -3428,7 +3408,7 @@ namespace netCollections
         /// <returns>The smallest item in the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        public static T Minimum<T>(IEnumerable<T> collection)
+        public static T Minimum<T>(this IEnumerable<T> collection)
             where T : IComparable<T>
         {
             return Minimum(collection, Comparer<T>.Default);
@@ -3444,7 +3424,7 @@ namespace netCollections
         /// <returns>The smallest item in the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="comparer"/> is null.</exception>
-        public static T Minimum<T>(IEnumerable<T> collection, IComparer<T> comparer)
+        public static T Minimum<T>(this IEnumerable<T> collection, IComparer<T> comparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -3482,7 +3462,7 @@ namespace netCollections
         /// <returns>The smallest item in the collection.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="comparison"/> is null.</exception>
-        public static T Minimum<T>(IEnumerable<T> collection, Comparison<T> comparison)
+        public static T Minimum<T>(this IEnumerable<T> collection, Comparison<T> comparison)
         {
             return Minimum(collection, Comparers.ComparerFromComparison(comparison));
         }
@@ -3497,7 +3477,7 @@ namespace netCollections
         /// <returns>The index of the largest item in the list. If the maximum value appears
         /// multiple times, the index of the first appearance is used. If the list is empty, -1 is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
-        public static int IndexOfMaximum<T>(IList<T> list)
+        public static int IndexOfMaximum<T>(this IList<T> list)
            where T : IComparable<T>
         {
             return IndexOfMaximum(list, Comparer<T>.Default);
@@ -3513,7 +3493,7 @@ namespace netCollections
         /// <returns>The index of the largest item in the list. If the maximum value appears
         /// multiple times, the index of the first appearance is used. If the list is empty, -1 is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> or <paramref name="comparer"/> is null.</exception>
-        public static int IndexOfMaximum<T>(IList<T> list, IComparer<T> comparer)
+        public static int IndexOfMaximum<T>(this IList<T> list, IComparer<T> comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -3549,7 +3529,7 @@ namespace netCollections
         /// <returns>The index of the largest item in the list. If the maximum value appears
         /// multiple times, the index of the first appearance is used. If the list is empty, -1 is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> or <paramref name="comparison"/> is null.</exception>
-        public static int IndexOfMaximum<T>(IList<T> list, Comparison<T> comparison)
+        public static int IndexOfMaximum<T>(this IList<T> list, Comparison<T> comparison)
         {
             return IndexOfMaximum(list, Comparers.ComparerFromComparison(comparison));
         }
@@ -3565,7 +3545,7 @@ namespace netCollections
         /// multiple times, the index of the first appearance is used.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
-        public static int IndexOfMinimum<T>(IList<T> list)
+        public static int IndexOfMinimum<T>(this IList<T> list)
             where T : IComparable<T>
         {
             return IndexOfMinimum(list, Comparer<T>.Default);
@@ -3582,7 +3562,7 @@ namespace netCollections
         /// multiple times, the index of the first appearance is used.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> or <paramref name="comparer"/> is null.</exception>
-        public static int IndexOfMinimum<T>(IList<T> list, IComparer<T> comparer)
+        public static int IndexOfMinimum<T>(this IList<T> list, IComparer<T> comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -3619,7 +3599,7 @@ namespace netCollections
         /// multiple times, the index of the first appearance is used.</returns>
         /// <exception cref="InvalidOperationException">The collection is empty.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> or <paramref name="comparison"/> is null.</exception>
-        public static int IndexOfMinimum<T>(IList<T> list, Comparison<T> comparison)
+        public static int IndexOfMinimum<T>(this IList<T> list, Comparison<T> comparison)
         {
             return IndexOfMinimum(list, Comparers.ComparerFromComparison(comparison));
         }
@@ -3635,7 +3615,7 @@ namespace netCollections
         /// interfaces implementation on the type T.</remarks>
         /// <param name="collection">The collection to sort.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] Sort<T>(IEnumerable<T> collection)
+        public static T[] Sort<T>(this IEnumerable<T> collection)
             where T : IComparable<T>
         {
             return Sort(collection, Comparer<T>.Default);
@@ -3649,7 +3629,7 @@ namespace netCollections
         /// <param name="comparer">The comparer instance used to compare items in the collection. Only
         /// the Compare method is used.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] Sort<T>(IEnumerable<T> collection, IComparer<T> comparer)
+        public static T[] Sort<T>(this IEnumerable<T> collection, IComparer<T> comparer)
         {
             T[] array;
 
@@ -3671,7 +3651,7 @@ namespace netCollections
         /// <param name="collection">The collection to sort.</param>
         /// <param name="comparison">The comparison delegate used to compare items in the collection.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] Sort<T>(IEnumerable<T> collection, Comparison<T> comparison)
+        public static T[] Sort<T>(this IEnumerable<T> collection, Comparison<T> comparison)
         {
             return Sort(collection, Comparers.ComparerFromComparison(comparison));
         }
@@ -3686,7 +3666,7 @@ namespace netCollections
         /// <para>Although arrays cast to <see cref="IList{T}"/> are normally read-only, this method
         /// will work correctly and modify an array passed as <paramref name="list"/>.</para></remarks>
         /// <param name="list">The list or array to sort.</param>
-        public static void SortInPlace<T>(IList<T> list)
+        public static void SortInPlace<T>(this IList<T> list)
             where T : IComparable<T>
         {
             SortInPlace(list, Comparer<T>.Default);
@@ -3703,7 +3683,7 @@ namespace netCollections
         /// <param name="list">The list or array to sort.</param>
         /// <param name="comparer">The comparer instance used to compare items in the collection. Only
         /// the Compare method is used.</param>
-        public static void SortInPlace<T>(IList<T> list, IComparer<T> comparer)
+        public static void SortInPlace<T>(this IList<T> list, IComparer<T> comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -3859,7 +3839,7 @@ namespace netCollections
         /// will work correctly and modify an array passed as <paramref name="list"/>.</para></remarks>
         /// <param name="list">The list or array to sort.</param>
         /// <param name="comparison">The comparison delegate used to compare items in the collection.</param>
-        public static void SortInPlace<T>(IList<T> list, Comparison<T> comparison)
+        public static void SortInPlace<T>(this IList<T> list, Comparison<T> comparison)
         {
             SortInPlace(list, Comparers.ComparerFromComparison(comparison));
         }
@@ -3872,7 +3852,7 @@ namespace netCollections
         /// interfaces implementation on the type T.</remarks>
         /// <param name="collection">The collection to sort.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] StableSort<T>(IEnumerable<T> collection)
+        public static T[] StableSort<T>(this IEnumerable<T> collection)
             where T : IComparable<T>
         {
             return StableSort(collection, Comparer<T>.Default);
@@ -3887,7 +3867,7 @@ namespace netCollections
         /// <param name="comparer">The comparer instance used to compare items in the collection. Only
         /// the Compare method is used.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] StableSort<T>(IEnumerable<T> collection, IComparer<T> comparer)
+        public static T[] StableSort<T>(this IEnumerable<T> collection, IComparer<T> comparer)
         {
             T[] array;
 
@@ -3898,7 +3878,7 @@ namespace netCollections
 
             array = ToArray(collection);
 
-            StableSortInPlace(ReadWriteList(array), comparer);
+            StableSortInPlace(AsReadWriteList(array), comparer);
             return array;
         }
 
@@ -3913,7 +3893,7 @@ namespace netCollections
         /// <param name="collection">The collection to sort.</param>
         /// <param name="comparison">The comparison delegate used to compare items in the collection.</param>
         /// <returns>An array containing the sorted version of the collection.</returns>
-        public static T[] StableSort<T>(IEnumerable<T> collection, Comparison<T> comparison)
+        public static T[] StableSort<T>(this IEnumerable<T> collection, Comparison<T> comparison)
         {
             return StableSort(collection, Comparers.ComparerFromComparison(comparison));
         }
@@ -3927,7 +3907,7 @@ namespace netCollections
         /// <para>Although arrays cast to <see cref="IList{T}"/> are normally read-only, this method
         /// will work correctly and modify an array passed as <paramref name="list"/>.</para></remarks>
         /// <param name="list">The list or array to sort.</param>
-        public static void StableSortInPlace<T>(IList<T> list)
+        public static void StableSortInPlace<T>(this IList<T> list)
             where T : IComparable<T>
         {
             StableSortInPlace(list, Comparer<T>.Default);
@@ -3944,7 +3924,7 @@ namespace netCollections
         /// <param name="list">The list or array to sort.</param>
         /// <param name="comparer">The comparer instance used to compare items in the collection. Only
         /// the Compare method is used.</param>
-        public static void StableSortInPlace<T>(IList<T> list, IComparer<T> comparer)
+        public static void StableSortInPlace<T>(this IList<T> list, IComparer<T> comparer)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -4110,7 +4090,7 @@ namespace netCollections
         /// will work correctly and modify an array passed as <paramref name="list"/>.</remarks>
         /// <param name="list">The list or array to sort.</param>
         /// <param name="comparison">The comparison delegate used to compare items in the collection.</param>
-        public static void StableSortInPlace<T>(IList<T> list, Comparison<T> comparison)
+        public static void StableSortInPlace<T>(this IList<T> list, Comparison<T> comparison)
         {
             StableSortInPlace(list, Comparers.ComparerFromComparison(comparison));
         }
@@ -4126,7 +4106,7 @@ namespace netCollections
         /// returns the index at which <paramref name="item"/> could be inserted to maintain the sorted
         /// order of the list.</param>
         /// <returns>The number of items equal to <paramref name="item"/> that appear in the list.</returns>
-        public static int BinarySearch<T>(IList<T> list, T item, out int index)
+        public static int BinarySearch<T>(this IList<T> list, T item, out int index)
             where T : IComparable<T>
         {
             return BinarySearch(list, item, Comparer<T>.Default, out index);
@@ -4147,7 +4127,7 @@ namespace netCollections
         /// <returns>
         /// The number of items equal to <paramref name="item"/> that appear in the list.
         /// </returns>
-        public static int BinarySearch<T>(IList<T> list, T item, IComparer<T> comparer, out int index)
+        public static int BinarySearch<T>(this IList<T> list, T item, IComparer<T> comparer, out int index)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -4238,7 +4218,7 @@ namespace netCollections
         /// returns the index at which <paramref name="item"/> could be inserted to maintain the sorted
         /// order of the list.</param>
         /// <returns>The number of items equal to <paramref name="item"/> that appear in the list.</returns>
-        public static int BinarySearch<T>(IList<T> list, T item, Comparison<T> comparison, out int index)
+        public static int BinarySearch<T>(this IList<T> list, T item, Comparison<T> comparison, out int index)
         {
             return BinarySearch(list, item, Comparers.ComparerFromComparison(comparison), out index);
         }
@@ -4271,7 +4251,7 @@ namespace netCollections
         /// the Compare method is used.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates all the items in all the collections
         /// in sorted order. </returns>
-        public static IEnumerable<T> MergeSorted<T>(IComparer<T> comparer, params IEnumerable<T>[] collections)
+        public static IEnumerable<T> MergeSorted<T>(this IComparer<T> comparer, params IEnumerable<T>[] collections)
         {
             if (collections == null)
                 throw new ArgumentNullException(nameof(collections));
@@ -4344,7 +4324,7 @@ namespace netCollections
         /// <param name="comparison">The comparison delegate used to sort the collections.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> that enumerates all the items in all the collections
         /// in sorted order. </returns>
-        public static IEnumerable<T> MergeSorted<T>(Comparison<T> comparison, params IEnumerable<T>[] collections)
+        public static IEnumerable<T> MergeSorted<T>(this Comparison<T> comparison, params IEnumerable<T>[] collections)
         {
             return MergeSorted(Comparers.ComparerFromComparison(comparison), collections);
         }
@@ -4367,7 +4347,7 @@ namespace netCollections
         /// Greater than zero if <paramref name="sequence1"/> is lexicographically greater than <paramref name="sequence2"/>.
         /// Zero if <paramref name="sequence1"/> is equal to <paramref name="sequence2"/>.</returns>
         /// <exception cref="NotSupportedException">T does not implement <see cref="IComparable{T}"/> or IComparable.</exception>
-        public static int LexicographicalCompare<T>(IEnumerable<T> sequence1, IEnumerable<T> sequence2)
+        public static int LexicographicalCompare<T>(this IEnumerable<T> sequence1, IEnumerable<T> sequence2)
             where T : IComparable<T>
         {
             return LexicographicalCompare(sequence1, sequence2, Comparer<T>.Default);
@@ -4388,7 +4368,7 @@ namespace netCollections
         /// <returns>Less than zero if <paramref name="sequence1"/> is lexicographically less than <paramref name="sequence2"/>.
         /// Greater than zero if <paramref name="sequence1"/> is lexicographically greater than <paramref name="sequence2"/>.
         /// Zero if <paramref name="sequence1"/> is equal to <paramref name="sequence2"/>.</returns>
-        public static int LexicographicalCompare<T>(IEnumerable<T> sequence1, IEnumerable<T> sequence2, Comparison<T> comparison)
+        public static int LexicographicalCompare<T>(this IEnumerable<T> sequence1, IEnumerable<T> sequence2, Comparison<T> comparison)
         {
             return LexicographicalCompare(sequence1, sequence2, Comparers.ComparerFromComparison(comparison));
         }
@@ -4410,7 +4390,7 @@ namespace netCollections
         /// Zero if <paramref name="sequence1"/> is equal to <paramref name="sequence2"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="sequence1"/>, <paramref name="sequence2"/>, or 
         /// <paramref name="comparer"/> is null.</exception>
-        public static int LexicographicalCompare<T>(IEnumerable<T> sequence1, IEnumerable<T> sequence2, IComparer<T> comparer)
+        public static int LexicographicalCompare<T>(this IEnumerable<T> sequence1, IEnumerable<T> sequence2, IComparer<T> comparer)
         {
             if (sequence1 == null)
                 throw new ArgumentNullException(nameof(sequence1));
@@ -4511,7 +4491,7 @@ namespace netCollections
         /// </summary>
         /// <param name="comparer">A comparer instance used to compare individual items of type T.</param>
         /// <returns>At IComparer{<see cref="IEnumerable{T}"/>} that compares sequences of T.</returns>
-        public static IComparer<IEnumerable<T>> GetLexicographicalComparer<T>(IComparer<T> comparer)
+        public static IComparer<IEnumerable<T>> GetLexicographicalComparer<T>(this IComparer<T> comparer)
         {
             if (comparer == null)
                 throw new ArgumentNullException(nameof(comparer));
@@ -4527,7 +4507,7 @@ namespace netCollections
         /// </summary>
         /// <param name="comparison">A comparison delegate used to compare individual items of type T.</param>
         /// <returns>At IComparer{<see cref="IEnumerable{T}"/>} that compares sequences of T.</returns>
-        public static IComparer<IEnumerable<T>> GetLexicographicalComparer<T>(Comparison<T> comparison)
+        public static IComparer<IEnumerable<T>> GetLexicographicalComparer<T>(this Comparison<T> comparison)
         {
             if (comparison == null)
                 throw new ArgumentNullException(nameof(comparison));
@@ -4581,7 +4561,7 @@ namespace netCollections
         /// <param name="comparer">The comparer to reverse.</param>
         /// <returns>An <see cref="IComparer{T}"/> that compares items in the reverse order of <paramref name="comparer"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="comparer"/> is null.</exception>
-        public static IComparer<T> GetReverseComparer<T>(IComparer<T> comparer)
+        public static IComparer<T> GetReverseComparer<T>(this IComparer<T> comparer)
         {
             if (comparer == null)
                 throw new ArgumentNullException(nameof(comparer));
@@ -4641,7 +4621,7 @@ namespace netCollections
         /// <param name="comparison">The comparison to reverse.</param>
         /// <returns>A <see cref="Comparison{T}"/> that compares items in the reverse order of <paramref name="comparison"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="comparison"/> is null.</exception>
-        public static Comparison<T> GetReverseComparison<T>(Comparison<T> comparison)
+        public static Comparison<T> GetReverseComparison<T>(this Comparison<T> comparison)
         {
             if (comparison == null)
                 throw new ArgumentNullException(nameof(comparison));
@@ -4656,7 +4636,7 @@ namespace netCollections
         /// <param name="comparison">The comparison delegate to use.</param>
         /// <returns>An <see cref="IComparer{T}"/> that performs the same comparing operation
         /// as <paramref name="comparison"/>.</returns>
-        public static IComparer<T> GetComparerFromComparison<T>(Comparison<T> comparison)
+        public static IComparer<T> GetComparerFromComparison<T>(this Comparison<T> comparison)
         {
             if (comparison == null)
                 throw new ArgumentNullException(nameof(comparison));
@@ -4671,7 +4651,7 @@ namespace netCollections
         /// <param name="comparer">The <see cref="IComparer{T}"/> instance to use.</param>
         /// <returns>A <see cref="Comparison{T}"/> delegate that performans the same comparing
         /// operation as <paramref name="comparer"/>.</returns>
-        public static Comparison<T> GetComparisonFromComparer<T>(IComparer<T> comparer)
+        public static Comparison<T> GetComparisonFromComparer<T>(this IComparer<T> comparer)
         {
             if (comparer == null)
                 throw new ArgumentNullException(nameof(comparer));
@@ -4751,7 +4731,7 @@ namespace netCollections
         /// <returns>IEqualityComparer{<see cref="IEnumerable{T}"/>} implementation suitable for 
         /// comparing collections of T for equality.</returns>
         /// <seealso cref="Algorithms.EqualCollections{T}"/>
-        public static IEqualityComparer<IEnumerable<T>> GetCollectionEqualityComparer<T>(IEqualityComparer<T> equalityComparer)
+        public static IEqualityComparer<IEnumerable<T>> GetCollectionEqualityComparer<T>(this IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -4833,7 +4813,7 @@ namespace netCollections
         /// <returns>IEqualityComparer{<see cref="IEnumerable{T}"/>} implementation suitable for 
         /// comparing collections of T for equality, without regard to order.</returns>
         /// <seealso cref="Algorithms.EqualSets"/>
-        public static IEqualityComparer<IEnumerable<T>> GetSetEqualityComparer<T>(IEqualityComparer<T> equalityComparer)
+        public static IEqualityComparer<IEnumerable<T>> GetSetEqualityComparer<T>(this IEqualityComparer<T> equalityComparer)
         {
             if (equalityComparer == null)
                 throw new ArgumentNullException(nameof(equalityComparer));
@@ -4854,7 +4834,7 @@ namespace netCollections
         /// <returns>True if the collection contains one or more items that satisfy the condition
         /// defined by <paramref name="predicate"/>. False if the collection does not contain
         /// an item that satisfies <paramref name="predicate"/>.</returns>
-        public static bool Exists<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static bool Exists<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -4879,7 +4859,7 @@ namespace netCollections
         /// <returns>True if all of the items in the collection satisfy the condition
         /// defined by <paramref name="predicate"/>, or if the collection is empty. False if one or more items
         /// in the collection do not satisfy <paramref name="predicate"/>.</returns>
-        public static bool TrueForAll<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static bool TrueForAll<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -4902,7 +4882,7 @@ namespace netCollections
         /// <param name="collection">The collection to count items in.</param>
         /// <param name="predicate">A delegate that defines the condition to check for.</param>
         /// <returns>The number of items in the collection that satisfy <paramref name="predicate"/>.</returns>
-        public static int CountWhere<T>(IEnumerable<T> collection, Predicate<T> predicate)
+        public static int CountWhere<T>(this IEnumerable<T> collection, Predicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -4932,7 +4912,7 @@ namespace netCollections
         /// <param name="predicate">A delegate that defines the condition to check for.</param>
         /// <returns>Returns a collection of the items that were removed. This collection contains the
         /// items in the same order that they orginally appeared in <paramref name="collection"/>.</returns>
-        public static ICollection<T> RemoveWhere<T>(ICollection<T> collection, Predicate<T> predicate)
+        public static ICollection<T> RemoveWhere<T>(this ICollection<T> collection, Predicate<T> predicate)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -5074,7 +5054,7 @@ namespace netCollections
         /// </summary>
         /// <param name="collection">The collection to process.</param>
         /// <param name="action">An Action delegate which is invoked for each item in <paramref name="collection"/>.</param>
-        public static void ForEach<T>(IEnumerable<T> collection, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -5096,7 +5076,7 @@ namespace netCollections
         /// <returns>The index of the first item in the second half of the partition; i.e., the first item for
         /// which <paramref name="predicate"/> returned false. If the predicate was true for all items
         /// in the list, list.Count is returned.</returns>
-        public static int Partition<T>(IList<T> list, Predicate<T> predicate)
+        public static int Partition<T>(this IList<T> list, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -5143,7 +5123,7 @@ namespace netCollections
         /// <returns>The index of the first item in the second half of the partition; i.e., the first item for
         /// which <paramref name="predicate"/> returned false. If the predicate was true for all items
         /// in the list, list.Count is returned.</returns>
-        public static int StablePartition<T>(IList<T> list, Predicate<T> predicate)
+        public static int StablePartition<T>(this IList<T> list, Predicate<T> predicate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -5194,10 +5174,13 @@ namespace netCollections
         /// <param name="collections">The set of collections to concatenate. In many languages, this parameter
         /// can be specified as several individual parameters.</param>
         /// <returns>An IEnumerable that enumerates all the items in each of the collections, in order.</returns>
-        public static IEnumerable<T> Concatenate<T>(params IEnumerable<T>[] collections)
+        public static IEnumerable<T> Concatenate<T>(this IEnumerable<T> first, params IEnumerable<T>[] collections)
         {
             if (collections == null)
                 throw new ArgumentNullException(nameof(collections));
+
+            foreach (T item in first)
+                yield return item;
 
             foreach (IEnumerable<T> coll in collections)
             {
@@ -5216,7 +5199,7 @@ namespace netCollections
         /// <param name="collection1">The first collection to compare.</param>
         /// <param name="collection2">The second collection to compare.</param>
         /// <returns>True if the collections have equal items in the same order. If both collections are empty, true is returned.</returns>
-        public static bool EqualCollections<T>(IEnumerable<T> collection1, IEnumerable<T> collection2)
+        public static bool EqualCollections<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2)
         {
             return EqualCollections(collection1, collection2, EqualityComparer<T>.Default);
         }
@@ -5233,7 +5216,7 @@ namespace netCollections
         /// <returns>True if the collections have equal items in the same order. If both collections are empty, true is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/>, <paramref name="collection2"/>, or
         /// <paramref name="equalityComparer"/> is null.</exception>
-        public static bool EqualCollections<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
+        public static bool EqualCollections<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, IEqualityComparer<T> equalityComparer)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -5283,7 +5266,7 @@ namespace netCollections
         /// items in the two collections. If both collections are empty, true is returned.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection1"/>, <paramref name="collection2"/>, or
         /// <paramref name="predicate"/> is null.</exception>
-        public static bool EqualCollections<T>(IEnumerable<T> collection1, IEnumerable<T> collection2, BinaryPredicate<T> predicate)
+        public static bool EqualCollections<T>(this IEnumerable<T> collection1, IEnumerable<T> collection2, BinaryPredicate<T> predicate)
         {
             if (collection1 == null)
                 throw new ArgumentNullException(nameof(collection1));
@@ -5320,7 +5303,7 @@ namespace netCollections
         /// <param name="collection">Collection to create array from.</param>
         /// <returns>An array with the items from the collection, in enumeration order.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        public static T[] ToArray<T>(IEnumerable<T> collection)
+        public static T[] ToArray<T>(this IEnumerable<T> collection)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -5356,7 +5339,7 @@ namespace netCollections
         /// <param name="collection">The collection to count items in.</param>
         /// <returns>The number of items in the collection.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> is null.</exception>
-        public static int Count<T>(IEnumerable<T> collection)
+        public static int Count<T>(this IEnumerable<T> collection)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -5382,7 +5365,7 @@ namespace netCollections
         /// <param name="collection">The collection to count items in.</param>
         /// <param name="find">The item to compare to.</param>
         /// <returns>The number of items in the collection that are equal to <paramref name="find"/>.</returns>
-        public static int CountEqual<T>(IEnumerable<T> collection, T find)
+        public static int CountEqual<T>(this IEnumerable<T> collection, T find)
         {
             return CountEqual(collection, find, EqualityComparer<T>.Default);
         }
@@ -5397,7 +5380,7 @@ namespace netCollections
         /// <returns>The number of items in the collection that are equal to <paramref name="find"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="collection"/> or <paramref name="equalityComparer"/>
         /// is null.</exception>
-        public static int CountEqual<T>(IEnumerable<T> collection, T find, IEqualityComparer<T> equalityComparer)
+        public static int CountEqual<T>(this IEnumerable<T> collection, T find, IEqualityComparer<T> equalityComparer)
         {
             if (collection == null)
                 throw new ArgumentNullException(nameof(collection));
@@ -5450,7 +5433,7 @@ namespace netCollections
         /// <param name="value">The value to fill with.</param>
         /// <exception cref="ArgumentException"><paramref name="list"/> is a read-only list.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
-        public static void Fill<T>(IList<T> list, T value)
+        public static void Fill<T>(this IList<T> list, T value)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -5470,7 +5453,7 @@ namespace netCollections
         /// <param name="array">The array to modify.</param>
         /// <param name="value">The value to fill with.</param>
         /// <exception cref="ArgumentNullException"><paramref name="array"/> is null.</exception>
-        public static void Fill<T>(T[] array, T value)
+        public static void Fill<T>(this T[] array, T value)
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
@@ -5493,7 +5476,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> or <paramref name="count"/> is negative, or 
         /// <paramref name="start"/> + <paramref name="count"/> is greater than <paramref name="list"/>.Count.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
-        public static void FillRange<T>(IList<T> list, int start, int count, T value)
+        public static void FillRange<T>(this IList<T> list, int start, int count, T value)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -5523,7 +5506,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="start"/> or <paramref name="count"/> is negative, or 
         /// <paramref name="start"/> + <paramref name="count"/> is greater than <paramref name="array"/>.Length.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="array"/> is null.</exception>
-        public static void FillRange<T>(T[] array, int start, int count, T value)
+        public static void FillRange<T>(this T[] array, int start, int count, T value)
         {
             if (array == null)
                 throw new ArgumentNullException(nameof(array));
@@ -5551,7 +5534,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="destIndex"/> is negative or 
         /// greater than <paramref name="dest"/>.Count.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
-        public static void Copy<T>(IEnumerable<T> source, IList<T> dest, int destIndex)
+        public static void Copy<T>(this IEnumerable<T> source, IList<T> dest, int destIndex)
         {
             Copy(source, dest, destIndex, int.MaxValue);
         }
@@ -5568,7 +5551,7 @@ namespace netCollections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
         /// <exception cref="ArgumentException">The collection has more items than will fit into the array. In this case, the array
         /// has been filled with as many items as fit before the exception is thrown.</exception>
-        public static void Copy<T>(IEnumerable<T> source, T[] dest, int destIndex)
+        public static void Copy<T>(this IEnumerable<T> source, T[] dest, int destIndex)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5601,7 +5584,7 @@ namespace netCollections
         /// greater than <paramref name="dest"/>.Count</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
-        public static void Copy<T>(IEnumerable<T> source, IList<T> dest, int destIndex, int count)
+        public static void Copy<T>(this IEnumerable<T> source, IList<T> dest, int destIndex, int count)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5647,7 +5630,7 @@ namespace netCollections
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative or <paramref name="destIndex"/> + <paramref name="count"/>
         /// is greater than <paramref name="dest"/>.Length.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
-        public static void Copy<T>(IEnumerable<T> source, T[] dest, int destIndex, int count)
+        public static void Copy<T>(this IEnumerable<T> source, T[] dest, int destIndex, int count)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5686,7 +5669,7 @@ namespace netCollections
         /// greater than <paramref name="dest"/>.Count</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative or too large.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
-        public static void Copy<T>(IList<T> source, int sourceIndex, IList<T> dest, int destIndex, int count)
+        public static void Copy<T>(this IList<T> source, int sourceIndex, IList<T> dest, int destIndex, int count)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5760,7 +5743,7 @@ namespace netCollections
         /// greater than <paramref name="dest"/>.Length</exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> is negative or too large.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="dest"/> is null.</exception>
-        public static void Copy<T>(IList<T> source, int sourceIndex, T[] dest, int destIndex, int count)
+        public static void Copy<T>(this IList<T> source, int sourceIndex, T[] dest, int destIndex, int count)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5803,7 +5786,7 @@ namespace netCollections
         /// <param name="source">The list to reverse.</param>
         /// <returns>A collection that contains the items from <paramref name="source"/> in reverse order.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-        public static IEnumerable<T> Reverse<T>(IList<T> source)
+        public static IEnumerable<T> Reverse<T>(this IList<T> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5820,7 +5803,7 @@ namespace netCollections
         /// <param name="list">The list or array to reverse.</param>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="list"/> is read only.</exception>
-        public static void ReverseInPlace<T>(IList<T> list)
+        public static void ReverseInPlace<T>(this IList<T> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -5849,7 +5832,7 @@ namespace netCollections
         /// Rotating by negative 3 means that source[source.Count - 3] is the first item in the returned collection.</param>
         /// <returns>A collection that contains the items from <paramref name="source"/> in rotated order.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null.</exception>
-        public static IEnumerable<T> Rotate<T>(IList<T> source, int amountToRotate)
+        public static IEnumerable<T> Rotate<T>(this IList<T> source, int amountToRotate)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -5879,7 +5862,7 @@ namespace netCollections
         /// For example, rotating by positive 3 means that list[3] is the first item in the resulting list.
         /// Rotating by negative 3 means that list[list.Count - 3] is the first item in the resulting list.</param>
         /// <exception cref="ArgumentNullException"><paramref name="list"/> is null.</exception>
-        public static void RotateInPlace<T>(IList<T> list, int amountToRotate)
+        public static void RotateInPlace<T>(this IList<T> list, int amountToRotate)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));

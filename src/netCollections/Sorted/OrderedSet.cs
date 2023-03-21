@@ -3,21 +3,21 @@
 namespace netCollections.Sorted
 {
     /// <summary>
-    /// OrderedSet&lt;T&gt; is a collection that contains items of type T. 
+    /// <see cref="OrderedSet{T}"/> is a collection that contains items of type T. 
     /// The item are maintained in a sorted order, and duplicate items are not allowed. Each item has
     /// an index in the set: the smallest item has index 0, the next smallest item has index 1,
     /// and so forth.
     /// </summary>
     /// <remarks>
-    /// <p>The items are compared in one of three ways. If T implements IComparable&lt;TKey&gt; or IComparable,
+    /// <p>The items are compared in one of three ways. If T implements <see cref="IComparable{TKey}"/> or IComparable,
     /// then the CompareTo method of that interface will be used to compare items. Alternatively, a comparison
-    /// function can be passed in either as a delegate, or as an instance of IComparer&lt;TKey&gt;.</p>
+    /// function can be passed in either as a delegate, or as an instance of IComparer{TKey}.</p>
     /// <p>OrderedSet is implemented as a balanced binary tree. Inserting, deleting, and looking up an
     /// an element all are done in log(N) type, where N is the number of keys in the tree.</p>
-    /// <p><see cref="Set&lt;T&gt;"/> is similar, but uses hashing instead of comparison, and does not maintain
+    /// <p><see cref="<see cref="Set{T}"/> is similar, but uses hashing instead of comparison, and does not maintain
     /// the items in sorted order.</p>
     ///</remarks>
-    ///<seealso cref="Set&lt;T&gt;"/>
+    ///<seealso cref="<see cref="Set{T}"/>
     [Serializable]
     public class OrderedSet<T> : CollectionBase<T>, ICollection<T>, ICloneable
     {
@@ -30,14 +30,14 @@ namespace netCollections.Sorted
         #region Constructors
 
         /// <summary>
-        /// Creates a new OrderedSet. The T must implement IComparable&lt;T&gt;
+        /// Creates a new OrderedSet. The T must implement <see cref="IComparable{T}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare items in this set.
         /// </summary>
         ///<remarks>
         /// Items that are null are permitted, and will be sorted before all other items.
         ///</remarks>
-        /// <exception cref="InvalidOperationException">T does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedSet() :
             this(Comparers.DefaultComparer<T>())
         {
@@ -57,10 +57,10 @@ namespace netCollections.Sorted
         /// will be used to compare items in this set.
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;T&gt; will never
+        /// The GetHashCode and Equals methods of the provided <see cref="IComparer{T}"/> will never
         /// be called, and need not be implemented.
         /// </remarks>
-        /// <param name="comparer">An instance of IComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="comparer">An instance of <see cref="IComparer{T}"/> that will be used to compare items.</param>
         public OrderedSet(IComparer<T> comparer)
         {
             this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
@@ -68,7 +68,7 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// Creates a new OrderedSet. The T must implement IComparable&lt;T&gt;
+        /// Creates a new OrderedSet. The T must implement <see cref="IComparable{T}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare items in this set. The set is
         /// initialized with all the items in the given collection.
@@ -77,7 +77,7 @@ namespace netCollections.Sorted
         /// Items that are null are permitted, and will be sorted before all other items.
         ///</remarks>
         /// <param name="collection">A collection with items to be placed into the OrderedSet.</param>
-        /// <exception cref="InvalidOperationException">T does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedSet(IEnumerable<T> collection) :
             this(collection, Comparers.DefaultComparer<T>())
         {
@@ -100,11 +100,11 @@ namespace netCollections.Sorted
         /// initialized with all the items in the given collection.
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;T&gt; will never
+        /// The GetHashCode and Equals methods of the provided <see cref="IComparer{T}"/> will never
         /// be called, and need not be implemented.
         /// </remarks>
         /// <param name="collection">A collection with items to be placed into the OrderedSet.</param>
-        /// <param name="comparer">An instance of IComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="comparer">An instance of <see cref="IComparer{T}"/> that will be used to compare items.</param>
         public OrderedSet(IEnumerable<T> collection, IComparer<T> comparer) :
             this(comparer)
         {
@@ -136,7 +136,7 @@ namespace netCollections.Sorted
         /// <returns>The cloned set.</returns>
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         /// <summary>
@@ -195,17 +195,17 @@ namespace netCollections.Sorted
         #region Basic collection containment
 
         /// <summary>
-        /// Returns the IComparer&lt;T&gt; used to compare items in this set. 
+        /// Returns the <see cref="IComparer{T}"/> used to compare items in this set. 
         /// </summary>
         /// <value>If the set was created using a comparer, that comparer is returned. If the set was
         /// created using a comparison delegate, then a comparer equivalent to that delegate
         /// is returned. Otherwise
-        /// the default comparer for T (Comparer&lt;T&gt;.Default) is returned.</value>
+        /// the default comparer for T (Comparer{T}.Default) is returned.</value>
         public IComparer<T> Comparer
         {
             get
             {
-                return this.comparer;
+                return comparer;
             }
         }
 
@@ -262,7 +262,7 @@ namespace netCollections.Sorted
         /// <example>
         /// In the following example, the set contains strings which are compared in a case-insensitive manner. 
         /// <code>
-        /// OrderedSet&lt;string&gt; set = new OrderedSet&lt;string&gt;(StringComparer.CurrentCultureIgnoreCase);
+        /// OrderedSet{string} set = new OrderedSet{string}(StringComparer.CurrentCultureIgnoreCase);
         /// set.Add("HELLO");
         /// string s;
         /// bool b = set.TryGetItem("Hello", out s);   // b receives true, s receives "HELLO".
@@ -542,13 +542,13 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
                 return false;     // Can't be a superset of a bigger set
 
             // Check each item in the other set to make sure it is in this set.
             foreach (T item in otherSet)
             {
-                if (!this.Contains(item))
+                if (!Contains(item))
                     return false;
             }
 
@@ -570,7 +570,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count >= this.Count)
+            if (otherSet.Count >= Count)
                 return false;     // Can't be a proper superset of a bigger or equal set
 
             return IsSupersetOf(otherSet);
@@ -622,11 +622,11 @@ namespace netCollections.Sorted
             CheckConsistentComparison(otherSet);
 
             // Must be the same size.
-            if (otherSet.Count != this.Count)
+            if (otherSet.Count != Count)
                 return false;
 
             // Since both sets are ordered, we can simply compare items in order.
-            using IEnumerator<T> enum1 = this.GetEnumerator(), enum2 = otherSet.GetEnumerator();
+            using IEnumerator<T> enum1 = GetEnumerator(), enum2 = otherSet.GetEnumerator();
             bool continue1, continue2;
 
             for (; ; )
@@ -682,7 +682,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
             OrderedSet<T> smaller, larger;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -719,7 +719,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
             OrderedSet<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -752,7 +752,7 @@ namespace netCollections.Sorted
             tree.StopEnumerations();
 
             OrderedSet<T> smaller, larger;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -791,7 +791,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
             OrderedSet<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -830,11 +830,11 @@ namespace netCollections.Sorted
 
             CheckConsistentComparison(otherSet);
 
-            if (otherSet.Count < this.Count)
+            if (otherSet.Count < Count)
             {
                 foreach (T item in otherSet)
                 {
-                    this.Remove(item);
+                    Remove(item);
                 }
             }
             else
@@ -859,7 +859,7 @@ namespace netCollections.Sorted
         public OrderedSet<T> Difference(OrderedSet<T> otherSet)
         {
             CheckConsistentComparison(otherSet);
-            OrderedSet<T> result = this.Clone();
+            OrderedSet<T> result = Clone();
             result.DifferenceWith(otherSet);
             return result;
         }
@@ -887,10 +887,10 @@ namespace netCollections.Sorted
             // CONSIDER: if otherSet is larger, better to clone it and reverse the below?
             foreach (T item in otherSet)
             {
-                if (this.Contains(item))
-                    this.Remove(item);
+                if (Contains(item))
+                    Remove(item);
                 else
-                    this.Add(item);
+                    Add(item);
             }
         }
 
@@ -911,7 +911,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherSet);
             OrderedSet<T> smaller, larger, result;
-            if (otherSet.Count > this.Count)
+            if (otherSet.Count > Count)
             {
                 smaller = this; larger = otherSet;
             }
@@ -942,7 +942,7 @@ namespace netCollections.Sorted
         /// at index 0. This view does not copy any data, and reflects any
         /// changes to the underlying OrderedSet.
         /// </summary>
-        /// <returns>A read-only IList&lt;T&gt; view onto this OrderedSet.</returns>
+        /// <returns>A read-only <see cref="IList{T}"/> view onto this OrderedSet.</returns>
         public IList<T> AsList()
         {
             return new ListView(this, tree.EntireRangeTester, true, false);
@@ -1168,7 +1168,7 @@ namespace netCollections.Sorted
         #region View nested class
 
         /// <summary>
-        /// The OrderedSet&lt;T&gt;.View class is used to look at a subset of the Items
+        /// The <see cref="OrderedSet{T}.View"/> class is used to look at a subset of the Items
         /// inside an ordered set. It is returned from the Range, RangeTo, RangeFrom, and Reversed methods. 
         /// </summary>
         ///<remarks>
@@ -1218,7 +1218,7 @@ namespace netCollections.Sorted
             /// <summary>
             /// Enumerate all the items in this view.
             /// </summary>
-            /// <returns>An IEnumerator&lt;T&gt; with the items in this view.</returns>
+            /// <returns>An <see cref="IEnumerator{T}"/> with the items in this view.</returns>
             public sealed override IEnumerator<T> GetEnumerator()
             {
                 if (reversed)
@@ -1436,7 +1436,7 @@ namespace netCollections.Sorted
             /// at index 0. This view does not copy any data, and reflects any
             /// changes to the underlying OrderedSet.
             /// </summary>
-            /// <returns>A read-only IList&lt;T&gt; view onto this view.</returns>
+            /// <returns>A read-only <see cref="IList{T}"/> view onto this view.</returns>
             public IList<T> AsList()
             {
                 return new ListView(mySet, rangeTester, entireTree, reversed);

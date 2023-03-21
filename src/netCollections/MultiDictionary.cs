@@ -11,8 +11,8 @@ namespace netCollections
     /// </summary>
     /// <typeparam name="TKey">The type of the keys.</typeparam>
     /// <typeparam name="TValue">The of values associated with the keys.</typeparam>
-    ///<seealso cref="Dictionary&lt;TKey,TValue&gt;"/>
-    ///<seealso cref="OrderedMultiDictionary&lt;TKey,TValue&gt;"/>
+    ///<seealso cref="Dictionary{TKey,TValue}"/>
+    ///<seealso cref="OrderedMultiDictionary{TKey,TValue}"/>
     [Serializable]
     public class MultiDictionary<TKey, TValue> : MultiDictionaryBase<TKey, TValue>, ICloneable
     {
@@ -60,9 +60,9 @@ namespace netCollections
             /// <param name="key">The key to use.</param>
             public KeyAndValues(TKey key)
             {
-                this.Key = key;
-                this.Count = 0;
-                this.Values = null;
+                Key = key;
+                Count = 0;
+                Values = null;
             }
 
             /// <summary>
@@ -122,10 +122,10 @@ namespace netCollections
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <remarks>The default ordering of keys and values will be used, as defined by TKey and TValue's implementation
-        /// of IComparable&lt;T&gt; (or IComparable if IComparable&lt;T&gt; is not implemented). If a different ordering should be
+        /// of <see cref="IComparable{T}"/> (or IComparable if <see cref="IComparable{T}"/> is not implemented). If a different ordering should be
         /// used, other constructors allow a custom Comparer or IComparer to be passed to changed the ordering.</remarks>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <exception cref="InvalidOperationException">TKey or TValue does not implement either IComparable&lt;T&gt; or IComparable.</exception>
+        /// <exception cref="InvalidOperationException">TKey or TValue does not implement either <see cref="IComparable{T}"/> or IComparable.</exception>
         public MultiDictionary(bool allowDuplicateValues)
             : this(allowDuplicateValues, EqualityComparer<TKey>.Default, EqualityComparer<TValue>.Default)
         {
@@ -139,8 +139,8 @@ namespace netCollections
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <param name="keyEqualityComparer">An IEqualityComparer&lt;TKey&gt; instance that will be used to compare keys.</param>
-        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable&lt;TValue&gt; or IComparable.</exception>
+        /// <param name="keyEqualityComparer">An IEqualityComparer{TKey} instance that will be used to compare keys.</param>
+        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable{TValue} or IComparable.</exception>
         public MultiDictionary(bool allowDuplicateValues, IEqualityComparer<TKey> keyEqualityComparer)
             : this(allowDuplicateValues, keyEqualityComparer, EqualityComparer<TValue>.Default)
         {
@@ -154,15 +154,15 @@ namespace netCollections
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <param name="keyEqualityComparer">An IEqualityComparer&lt;TKey&gt; instance that will be used to compare keys.</param>
-        /// <param name="valueEqualityComparer">An IEqualityComparer&lt;TValue&gt; instance that will be used to compare values.</param>
+        /// <param name="keyEqualityComparer">An IEqualityComparer{TKey} instance that will be used to compare keys.</param>
+        /// <param name="valueEqualityComparer">An IEqualityComparer{TValue} instance that will be used to compare values.</param>
         public MultiDictionary(bool allowDuplicateValues, IEqualityComparer<TKey> keyEqualityComparer, IEqualityComparer<TValue> valueEqualityComparer)
         {
             this.allowDuplicateValues = allowDuplicateValues;
             this.keyEqualityComparer = keyEqualityComparer ?? throw new ArgumentNullException(nameof(keyEqualityComparer));
             this.valueEqualityComparer = valueEqualityComparer ?? throw new ArgumentNullException(nameof(valueEqualityComparer));
-            this.equalityComparer = new KeyAndValuesEqualityComparer(keyEqualityComparer);
-            this.hash = new Hash<KeyAndValues>(equalityComparer);
+            equalityComparer = new KeyAndValuesEqualityComparer(keyEqualityComparer);
+            hash = new Hash<KeyAndValues>(equalityComparer);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace netCollections
                 existing.Count = existingCount + 1;
 
                 // Update the hash table.
-                hash.Find(existing, true, out keyValues);
+                hash.Find(existing, true, out _);
                 return;
             }
             else
@@ -235,7 +235,7 @@ namespace netCollections
                 // No item with this key. Add it.
                 keyValues.Count = 1;
                 keyValues.Values = new TValue[1] { value };
-                hash.Insert(keyValues, true, out existing);
+                hash.Insert(keyValues, true, out _);
                 return;
             }
         }
@@ -271,7 +271,7 @@ namespace netCollections
                 if (existingCount == 1)
                 {
                     // Removing the last value. Remove the key.
-                    hash.Delete(existing, out keyValues);
+                    _ = hash.Delete(existing, out _);
                     return true;
                 }
                 else if (indexFound >= 0)
@@ -282,7 +282,7 @@ namespace netCollections
                     existing.Count = existingCount - 1;
 
                     // Update the hash.
-                    hash.Find(existing, true, out keyValues);
+                    hash.Find(existing, true, out _);
                     return true;
                 }
                 else
@@ -307,7 +307,7 @@ namespace netCollections
         /// false if the key was not present.</returns>
         public sealed override bool Remove(TKey key)
         {
-            return hash.Delete(new KeyAndValues(key), out MultiDictionary<TKey, TValue>.KeyAndValues dummy);
+            return hash.Delete(new KeyAndValues(key), out _);
         }
 
         /// <summary>
@@ -326,28 +326,28 @@ namespace netCollections
         #region Query items
 
         /// <summary>
-        /// Returns the IEqualityComparer&lt;T&gt; used to compare keys in this dictionary. 
+        /// Returns the <see cref="IEqualityComparer{T}"/> used to compare keys in this dictionary. 
         /// </summary>
         /// <value>If the dictionary was created using a comparer, that comparer is returned. Otherwise
-        /// the default comparer for TKey (EqualityComparer&lt;TKey&gt;.Default) is returned.</value>
+        /// the default comparer for TKey (EqualityComparer{TKey}.Default) is returned.</value>
         public IEqualityComparer<TKey> KeyComparer
         {
             get
             {
-                return this.keyEqualityComparer;
+                return keyEqualityComparer;
             }
         }
 
         /// <summary>
-        /// Returns the IEqualityComparer&lt;T&gt; used to compare values in this dictionary. 
+        /// Returns the <see cref="IEqualityComparer{T}"/> used to compare values in this dictionary. 
         /// </summary>
         /// <value>If the dictionary was created using a comparer, that comparer is returned. Otherwise
-        /// the default comparer for TValue (EqualityComparer&lt;TValue&gt;.Default) is returned.</value>
+        /// the default comparer for TValue (EqualityComparer{TValue}.Default) is returned.</value>
         public IEqualityComparer<TValue> ValueComparer
         {
             get
             {
-                return this.valueEqualityComparer;
+                return valueEqualityComparer;
             }
         }
 
@@ -414,13 +414,13 @@ namespace netCollections
         public sealed override bool ContainsKey(TKey key)
         {
             KeyAndValues find = new(key);
-            return hash.Find(find, false, out MultiDictionary<TKey, TValue>.KeyAndValues temp);
+            return hash.Find(find, false, out _);
         }
 
         /// <summary>
         /// Enumerate all the keys in the dictionary. 
         /// </summary>
-        /// <returns>An IEnumerator&lt;TKey&gt; that enumerates all of the keys in the dictionary that
+        /// <returns>An IEnumerator{TKey} that enumerates all of the keys in the dictionary that
         /// have at least one value associated with them.</returns>
         protected sealed override IEnumerator<TKey> EnumerateKeys()
         {

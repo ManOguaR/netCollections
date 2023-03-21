@@ -3,24 +3,24 @@
 namespace netCollections.Generic
 {
     /// <summary>
-    /// Bag&lt;T&gt; is a collection that contains items of type T. 
+    /// <see cref="Bag{T}"/> is a collection that contains items of type T. 
     /// Unlike a Set, duplicate items (items that compare equal to each other) are allowed in an Bag. 
     /// </summary>
     /// <remarks>
-    /// <p>The items are compared in one of two ways. If T implements IComparable&lt;T&gt; 
+    /// <p>The items are compared in one of two ways. If T implements <see cref="IComparable{T}"/> 
     /// then the Equals method of that interface will be used to compare items, otherwise the Equals
-    /// method from Object will be used. Alternatively, an instance of IComparer&lt;T&gt; can be passed
+    /// method from Object will be used. Alternatively, an instance of <see cref="IComparer{T}"/> can be passed
     /// to the constructor to use to compare items.</p>
     /// <p>Bag is implemented as a hash table. Inserting, deleting, and looking up an
     /// an element all are done in approximately constant time, regardless of the number of items in the bag.</p>
     /// <p>When multiple equal items are stored in the bag, they are stored as a representative item and a count. 
     /// If equal items can be distinguished, this may be noticable. For example, if a case-insensitive
-    /// comparer is used with a Bag&lt;string&gt;, and both "hello", and "HELLO" are added to the bag, then the
+    /// comparer is used with a Bag{string}, and both "hello", and "HELLO" are added to the bag, then the
     /// bag will appear to contain two copies of "hello" (the representative item).</p>
-    /// <p><see cref="OrderedBag&lt;T&gt;"/> is similar, but uses comparison instead of hashing, maintain
+    /// <p><see cref="<see cref="OrderedBag{T}"/> is similar, but uses comparison instead of hashing, maintain
     /// the items in sorted order, and stores distinct copies of items that compare equal.</p>
     ///</remarks>
-    ///<seealso cref="OrderedBag&lt;T&gt;"/>
+    ///<seealso cref="<see cref="OrderedBag{T}"/>
     [Serializable]
     public class Bag<T> : CollectionBase<T>, ICloneable
     {
@@ -77,12 +77,12 @@ namespace netCollections.Generic
         /// Creates a new Bag. The Equals and GetHashCode methods of the passed comparison object
         /// will be used to compare items in this bag for equality.
         /// </summary>
-        /// <param name="equalityComparer">An instance of IEqualityComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="equalityComparer">An instance of <see cref="IEqualityComparer{T}"/> that will be used to compare items.</param>
         public Bag(IEqualityComparer<T> equalityComparer)
         {
-            this.keyEqualityComparer = equalityComparer ?? throw new ArgumentNullException(nameof(equalityComparer));
+            keyEqualityComparer = equalityComparer ?? throw new ArgumentNullException(nameof(equalityComparer));
             this.equalityComparer = Comparers.EqualityComparerKeyValueFromComparerKey<T, int>(equalityComparer);
-            this.hash = new Hash<KeyValuePair<T, int>>(this.equalityComparer);
+            hash = new Hash<KeyValuePair<T, int>>(this.equalityComparer);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace netCollections.Generic
         /// initialized with all the items in the given collection.
         /// </summary>
         /// <param name="collection">A collection with items to be placed into the Bag.</param>
-        /// <param name="equalityComparer">An instance of IEqualityComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="equalityComparer">An instance of <see cref="IEqualityComparer{T}"/> that will be used to compare items.</param>
         public Bag(IEnumerable<T> collection, IEqualityComparer<T> equalityComparer)
             : this(equalityComparer)
         {
@@ -140,7 +140,7 @@ namespace netCollections.Generic
         /// <returns>The cloned bag.</returns>
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         /// <summary>
@@ -196,10 +196,10 @@ namespace netCollections.Generic
         #region Basic collection containment
 
         /// <summary>
-        /// Returns the IEqualityComparer&lt;T&gt; used to compare items in this bag. 
+        /// Returns the <see cref="IEqualityComparer{T}"/> used to compare items in this bag. 
         /// </summary>
         /// <value>If the bag was created using a comparer, that comparer is returned. Otherwise
-        /// the default comparer for T (EqualityComparer&lt;T&gt;.Default) is returned.</value>
+        /// the default comparer for T (<see cref="IEqualityComparer{T}.Default"/>) is returned.</value>
         public IEqualityComparer<T> Comparer
         {
             get
@@ -300,7 +300,7 @@ namespace netCollections.Generic
         /// </summary>
         /// <remarks>If the bag is changed while items are being enumerated, the
         /// enumeration will terminate with an InvalidOperationException.</remarks>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates the unique items.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the unique items.</returns>
         public IEnumerable<T> DistinctItems()
         {
             foreach (KeyValuePair<T, int> pair in hash)
@@ -408,7 +408,7 @@ namespace netCollections.Generic
             // If we're adding ourselves, we need to copy to a separate array to avoid modification
             // during enumeration.
             if (this == collection)
-                collection = this.ToArray();
+                collection = ToArray();
 
             foreach (T item in collection)
             {
@@ -555,13 +555,13 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherBag);
 
             // Must be the same size.
-            if (otherBag.Count != this.Count)
+            if (otherBag.Count != Count)
                 return false;
 
             // Check each item to make sure it is in this set the same number of times.
             foreach (T item in otherBag.DistinctItems())
             {
-                if (this.NumberOfCopies(item) != otherBag.NumberOfCopies(item))
+                if (NumberOfCopies(item) != otherBag.NumberOfCopies(item))
                     return false;
             }
 
@@ -583,13 +583,13 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherBag);
 
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
                 return false;     // Can't be a superset of a bigger set
 
             // Check each item in the other set to make sure it is in this set.
             foreach (T item in otherBag.DistinctItems())
             {
-                if (this.NumberOfCopies(item) < otherBag.NumberOfCopies(item))
+                if (NumberOfCopies(item) < otherBag.NumberOfCopies(item))
                     return false;
             }
 
@@ -611,7 +611,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherBag);
 
-            if (otherBag.Count >= this.Count)
+            if (otherBag.Count >= Count)
                 return false;     // Can't be a proper superset of a bigger or equal set
 
             return IsSupersetOf(otherBag);
@@ -657,7 +657,7 @@ namespace netCollections.Generic
         {
             CheckConsistentComparison(otherBag);
             Bag<T> smaller, larger;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -700,7 +700,7 @@ namespace netCollections.Generic
             // added to this bag.
             foreach (T item in otherBag.DistinctItems())
             {
-                copiesInThis = this.NumberOfCopies(item);
+                copiesInThis = NumberOfCopies(item);
                 copiesInOther = otherBag.NumberOfCopies(item);
 
                 if (copiesInOther > copiesInThis)
@@ -726,7 +726,7 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherBag);
 
             Bag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -769,7 +769,7 @@ namespace netCollections.Generic
             // added to this bag.
             foreach (T item in otherBag.DistinctItems())
             {
-                copiesInThis = this.NumberOfCopies(item);
+                copiesInThis = NumberOfCopies(item);
                 copiesInOther = otherBag.NumberOfCopies(item);
 
                 ChangeNumberOfCopies(item, copiesInThis + copiesInOther);
@@ -795,7 +795,7 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherBag);
 
             Bag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -829,7 +829,7 @@ namespace netCollections.Generic
             hash.StopEnumerations();
 
             Bag<T> smaller, larger;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -880,7 +880,7 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherBag);
 
             Bag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -934,7 +934,7 @@ namespace netCollections.Generic
             // removed from this bag.
             foreach (T item in otherBag.DistinctItems())
             {
-                copiesInThis = this.NumberOfCopies(item);
+                copiesInThis = NumberOfCopies(item);
                 copiesInOther = otherBag.NumberOfCopies(item);
                 copies = copiesInThis - copiesInOther;
                 if (copies < 0)
@@ -964,7 +964,7 @@ namespace netCollections.Generic
 
             CheckConsistentComparison(otherBag);
 
-            result = this.Clone();
+            result = Clone();
             result.DifferenceWith(otherBag);
             return result;
         }
@@ -997,7 +997,7 @@ namespace netCollections.Generic
             // added to this bag.
             foreach (T item in otherBag.DistinctItems())
             {
-                copiesInThis = this.NumberOfCopies(item);
+                copiesInThis = NumberOfCopies(item);
                 copiesInOther = otherBag.NumberOfCopies(item);
                 copies = Math.Abs(copiesInThis - copiesInOther);
 
@@ -1025,7 +1025,7 @@ namespace netCollections.Generic
             CheckConsistentComparison(otherBag);
 
             Bag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }

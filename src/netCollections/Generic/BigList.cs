@@ -6,20 +6,20 @@ using System.Internals;
 namespace netCollections.Generic
 {
     /// <summary>
-    /// BigList&lt;T&gt; provides a list of items, in order, with indices of the items ranging from 0 to one less
-    /// than the count of items in the collection. BigList&lt;T&gt; is optimized for efficient operations on large (&gt;100 items)
+    /// <see cref="BigList{T}"/> provides a list of items, in order, with indices of the items ranging from 0 to one less
+    /// than the count of items in the collection. <see cref="BigList{T}"/> is optimized for efficient operations on large (&gt;100 items)
     /// lists, especially for insertions, deletions, copies, and concatinations.
     /// </summary>
     /// <remarks>
-    /// <para>BigList&lt;T&gt; class is similar in functionality to the standard List&lt;T&gt; class. Both classes
+    /// <para><see cref="BigList{T}"/> class is similar in functionality to the standard <see cref="List{T}"/> class. Both classes
     /// provide a collection that stores an set of items in order, with indices of the items ranging from 0 to one less
     /// than the count of items in the collection. Both classes provide the ability to add and remove items from any index,
     /// and the get or set the item at any index.</para> 
-    /// <para>BigList&lt;T&gt; differs significantly from List&lt;T&gt; in the performance of various operations, 
-    /// especially when the lists become large (several hundred items or more). With List&lt;T&gt;, inserting or removing
+    /// <para><see cref="BigList{T}"/> differs significantly from <see cref="List{T}"/> in the performance of various operations, 
+    /// especially when the lists become large (several hundred items or more). With <see cref="List{T}"/>, inserting or removing
     /// elements from anywhere in a large list except the end is very inefficient -- every item after the point of inserting
-    /// or deletion has to be moved in the list. The BigList&lt;T&gt; class, however, allows for fast insertions
-    /// and deletions anywhere in the list. Furthermore, BigList&lt;T&gt; allows copies of a list, sub-parts
+    /// or deletion has to be moved in the list. The <see cref="BigList{T}"/> class, however, allows for fast insertions
+    /// and deletions anywhere in the list. Furthermore, <see cref="BigList{T}"/> allows copies of a list, sub-parts
     /// of a list, and concatinations of two lists to be very fast. When a copy is made of part or all of a BigList,
     /// two lists shared storage for the parts of the lists that are the same. Only when one of the lists is changed is additional
     /// memory allocated to store the distinct parts of the lists.</para>
@@ -28,7 +28,7 @@ namespace netCollections.Generic
     /// a plain List. Because of this, if you want to process every element of a BigList, using a foreach loop is a lot
     /// more efficient than using a for loop and indexing the list.</para>
     /// <para>In general, use a List when the only operations you are using are Add (to the end), foreach,
-    /// or indexing, or you are very sure the list will always remain small (less than 100 items). For large (&gt;100 items) lists
+    /// or indexing, or you are very sure the list will always remain small (&lt;100 items). For large (&gt;100 items) lists
     /// that do insertions, removals, copies, concatinations, or sub-ranges, BigList will be more efficient than List. 
     /// In almost all cases, BigList is more efficient and easier to use than LinkedList.</para>
     /// </remarks>
@@ -175,7 +175,7 @@ namespace netCollections.Generic
         /// <param name="node">Node that becomes the new root. If null, the new BigList is empty.</param>
         private BigList(Node node)
         {
-            this.root = node;
+            root = node;
             CheckBalance();
         }
 
@@ -837,7 +837,7 @@ namespace netCollections.Generic
 
         /// <summary>
         /// Returns a view onto a sub-range of this list. Items are not copied; the
-        /// returned IList&lt;T&gt; is simply a different view onto the same underlying items. Changes to this list
+        /// returned <see cref="IList{T}"/> is simply a different view onto the same underlying items. Changes to this list
         /// are reflected in the view, and vice versa. Insertions and deletions in the view change the size of the 
         /// view, but insertions and deletions in the underlying list do not.
         /// </summary>
@@ -854,9 +854,9 @@ namespace netCollections.Generic
         /// size of this list.</exception>
         public sealed override IList<T> Range(int index, int count)
         {
-            if (index < 0 || index > this.Count || (index == this.Count && count != 0))
+            if (index < 0 || index > Count || (index == Count && count != 0))
                 throw new ArgumentOutOfRangeException(nameof(index));
-            if (count < 0 || count > this.Count || count + index > this.Count)
+            if (count < 0 || count > Count || count + index > Count)
                 throw new ArgumentOutOfRangeException(nameof(count));
 
             return new BigListRange(this, index, count);
@@ -872,7 +872,7 @@ namespace netCollections.Generic
         /// is much more efficient than accessing all items by index.</remarks>
         /// <param name="start">Index to start enumerating at.</param>
         /// <param name="maxItems">Max number of items to enumerate.</param>
-        /// <returns>An IEnumerator&lt;T&gt; that enumerates all the
+        /// <returns>An <see cref="IEnumerator{T}"/> that enumerates all the
         /// items in the given range.</returns>
         private IEnumerator<T> GetEnumerator(int start, int maxItems)
         {
@@ -970,8 +970,10 @@ namespace netCollections.Generic
                             break;
                         }
 
+#pragma warning disable IDE0059 // Asignación innecesaria de un valor
                         current = parent;
-                        // And keep going up...
+#pragma warning restore IDE0059 // Asignación innecesaria de un valor
+                               // And keep going up...
                     }
 
                     // current is now a new node we need to visit. Loop around to get it.
@@ -987,7 +989,7 @@ namespace netCollections.Generic
         /// <remarks>Enumerating all of the items in the list take time O(N), where
         /// N is the number of items in the list. Using GetEnumerator() or foreach
         /// is much more efficient than accessing all items by index.</remarks>
-        /// <returns>An IEnumerator&lt;T&gt; that enumerates all the
+        /// <returns>An <see cref="IEnumerator{T}"/> that enumerates all the
         /// items in the list.</returns>
         public sealed override IEnumerator<T> GetEnumerator()
         {
@@ -995,7 +997,7 @@ namespace netCollections.Generic
         }
 
         /// <summary>
-        /// Given an IEnumerable&lt;T&gt;, create a new Node with all of the 
+        /// Given an <see cref="IEnumerable{T}"/>, create a new Node with all of the 
         /// items in the enumerable. Returns null if the enumerable has no items.
         /// </summary>
         /// <param name="collection">The collection to copy.</param>
@@ -1252,7 +1254,7 @@ namespace netCollections.Generic
         /// order. The current list is unchanged.
         /// </summary>
         /// <typeparam name="TDest">The type each item is being converted to.</typeparam>
-        /// <param name="converter">A delegate to the method to call, passing each item in <type name="BigList&lt;T&gt;"/>.</param>
+        /// <param name="converter">A delegate to the method to call, passing each item in <see cref="BigList{T}"/>.</param>
         /// <returns>The resulting BigList from applying <paramref name="converter"/> to each item in this list.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/> is null.</exception>
         public new BigList<TDest> ConvertAll<TDest>(Converter<T, TDest> converter)
@@ -1283,17 +1285,17 @@ namespace netCollections.Generic
         /// </summary>
         /// <remarks><para>The Quicksort algorithm is used to sort the items. In virtually all cases,
         /// this takes time O(N log N), where N is the number of items in the list.</para>
-        /// <para>Values are compared by using the IComparable or IComparable&lt;T&gt;
+        /// <para>Values are compared by using the IComparable or <see cref="IComparable{T}"/>
         /// interface implementation on the type T.</para></remarks>
         /// <exception cref="InvalidOperationException">The type T does not implement either the IComparable or
-        /// IComparable&lt;T&gt; interfaces.</exception>
+        /// <see cref="IComparable{T}"/> interfaces.</exception>
         public void Sort()
         {
             Sort(Comparers.DefaultComparer<T>());
         }
 
         /// <summary>
-        /// Sorts the list in place. A supplied IComparer&lt;T&gt; is used
+        /// Sorts the list in place. A supplied <see cref="IComparer{T}"/> is used
         /// to compare the items in the list. 
         /// </summary>
         /// <remarks>The Quicksort algorithms is used to sort the items. In virtually all cases,
@@ -1306,7 +1308,7 @@ namespace netCollections.Generic
         }
 
         /// <summary>
-        /// Sorts the list in place. A supplied Comparison&lt;T&gt; delegate is used
+        /// Sorts the list in place. A supplied <see cref="Comparison{T}"/> delegate is used
         /// to compare the items in the list.
         /// </summary>
         /// <remarks>The Quicksort algorithms is used to sort the items. In virtually all cases,
@@ -1328,7 +1330,7 @@ namespace netCollections.Generic
         /// in the list, the bitwise complement of the first item larger than <paramref name="item"/> in the list is returned. If no item is 
         /// larger than <paramref name="item"/>, the bitwise complement of Count is returned.</returns>
         /// <exception cref="InvalidOperationException">The type T does not implement either the IComparable or
-        /// IComparable&lt;T&gt; interfaces.</exception>
+        /// <see cref="IComparable{T}"/> interfaces.</exception>
         public int BinarySearch(T item)
         {
             return BinarySearch(item, Comparers.DefaultComparer<T>());
@@ -1336,11 +1338,11 @@ namespace netCollections.Generic
 
         /// <summary>
         /// Searches a sorted list for an item via binary search. The list must be sorted
-        /// by the ordering defined by the passed IComparer&lt;T&gt; interface; otherwise, 
+        /// by the ordering defined by the passed <see cref="IComparer{T}"/> interface; otherwise, 
         /// incorrect results will be returned.
         /// </summary>
         /// <param name="item">The item to search for.</param>
-        /// <param name="comparer">The IComparer&lt;T&gt; interface used to sort the list.</param>
+        /// <param name="comparer">The <see cref="IComparer{T}"/> interface used to sort the list.</param>
         /// <returns>Returns the index of the first occurence of <paramref name="item"/> in the list. If the item does not occur
         /// in the list, the bitwise complement of the first item larger than <paramref name="item"/> in the list is returned. If no item is 
         /// larger than <paramref name="item"/>, the bitwise complement of Count is returned.</returns>
@@ -1357,7 +1359,7 @@ namespace netCollections.Generic
 
         /// <summary>
         /// Searches a sorted list for an item via binary search. The list must be sorted
-        /// by the ordering defined by the passed Comparison&lt;T&gt; delegate; otherwise, 
+        /// by the ordering defined by the passed <see cref="Comparison{T}"/> delegate; otherwise, 
         /// incorrect results will be returned.
         /// </summary>
         /// <param name="item">The item to search for.</param>
@@ -1661,9 +1663,9 @@ namespace netCollections.Generic
             public Node PrependInPlace(Node node, bool nodeIsUnused)
             {
                 if (nodeIsUnused)
-                    return node.AppendInPlace(this, !this.shared);
+                    return node.AppendInPlace(this, !shared);
                 else
-                    return node.Append(this, !this.shared);
+                    return node.Append(this, !shared);
             }
 
             /// <summary>
@@ -1799,7 +1801,7 @@ namespace netCollections.Generic
                 Debug.Assert(!shared);
                 LeafNode otherLeaf = (other as LeafNode);
                 int newCount;
-                if (otherLeaf != null && (newCount = otherLeaf.Count + this.count) <= MAXLEAF)
+                if (otherLeaf != null && (newCount = otherLeaf.Count + count) <= MAXLEAF)
                 {
                     // Combine the two leaf nodes into one.
                     if (newCount > items.Length)
@@ -1828,7 +1830,7 @@ namespace netCollections.Generic
             {
                 LeafNode otherLeaf = (other as LeafNode);
                 int newCount;
-                if (otherLeaf != null && (newCount = otherLeaf.Count + this.count) <= MAXLEAF)
+                if (otherLeaf != null && (newCount = otherLeaf.Count + count) <= MAXLEAF)
                 {
                     // Combine the two leaf nodes into one.
                     T[] newItems = new T[MAXLEAF];
@@ -2058,7 +2060,7 @@ namespace netCollections.Generic
                 LeafNode otherLeaf = (node as LeafNode);
                 int newCount;
 
-                if (otherLeaf != null && (newCount = otherLeaf.Count + this.count) <= MAXLEAF)
+                if (otherLeaf != null && (newCount = otherLeaf.Count + count) <= MAXLEAF)
                 {
                     // Combine the two leaf nodes into one.
                     if (newCount > items.Length)
@@ -2122,7 +2124,7 @@ namespace netCollections.Generic
                 LeafNode otherLeaf = (node as LeafNode);
                 int newCount;
 
-                if (otherLeaf != null && (newCount = otherLeaf.Count + this.count) <= MAXLEAF)
+                if (otherLeaf != null && (newCount = otherLeaf.Count + count) <= MAXLEAF)
                 {
                     // Combine the two leaf nodes into one.
                     T[] newItems = new T[MAXLEAF];
@@ -2338,11 +2340,11 @@ namespace netCollections.Generic
                 Debug.Assert(left != null && right != null);
                 this.left = left;
                 this.right = right;
-                this.count = left.Count + right.Count;
+                count = left.Count + right.Count;
                 if (left.Depth > right.Depth)
-                    this.depth = (short)(left.Depth + 1);
+                    depth = (short)(left.Depth + 1);
                 else
-                    this.depth = (short)(right.Depth + 1);
+                    depth = (short)(right.Depth + 1);
             }
 
 
@@ -2512,7 +2514,7 @@ namespace netCollections.Generic
 
                     leftLeaf.items[0] = item;
                     leftLeaf.count += 1;
-                    this.count += 1;
+                    count += 1;
                     return this;
                 }
                 else
@@ -2545,7 +2547,7 @@ namespace netCollections.Generic
 
                     rightLeaf.items[c] = item;
                     rightLeaf.count += 1;
-                    this.count += 1;
+                    count += 1;
                     return this;
                 }
                 else
@@ -2583,7 +2585,7 @@ namespace netCollections.Generic
                     return NewNode(left, right.Append(node, nodeIsUnused));
 
                 // Concatinate with this node. 
-                this.MarkShared();
+                MarkShared();
                 if (!nodeIsUnused)
                     node.MarkShared();
                 return new ConcatNode(this, node);
@@ -2808,7 +2810,7 @@ namespace netCollections.Generic
         }
 
         /// <summary>
-        /// The class that is used to implement IList&lt;T&gt; to view a sub-range
+        /// The class that is used to implement <see cref="IList{T}"/> to view a sub-range
         /// of a BigList. The object stores a wrapped list, and a start/count indicating
         /// a sub-range of the list. Insertion/deletions through the sub-range view
         /// cause the count to change also; insertions and deletions directly on

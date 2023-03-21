@@ -26,8 +26,8 @@ namespace System.Utils.Sorting
         /// </summary>
         public SwapSorter()
         {
-            this.comparer = new ComparableComparer();
-            this.swapper = new DefaultSwap();
+            comparer = new ComparableComparer();
+            swapper = new DefaultSwap();
         }
         /// <summary>
         /// Contructor.
@@ -46,11 +46,11 @@ namespace System.Utils.Sorting
         {
             get
             {
-                return this.comparer;
+                return comparer;
             }
             set
             {
-                this.comparer = value ?? throw new ArgumentNullException("comparer");
+                comparer = value ?? throw new ArgumentNullException("comparer");
             }
         }
         /// <summary>
@@ -60,11 +60,11 @@ namespace System.Utils.Sorting
         {
             get
             {
-                return this.swapper;
+                return swapper;
             }
             set
             {
-                this.swapper = value ?? throw new ArgumentNullException("swapper");
+                swapper = value ?? throw new ArgumentNullException("swapper");
             }
         }
 

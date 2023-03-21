@@ -3,20 +3,20 @@ using System.Internals;
 namespace netCollections.Sorted
 {
     /// <summary>
-    /// OrderedDictionary&lt;TKey, TValue&gt; is a collection that maps keys of type TKey
+    /// OrderedDictionary{TKey, TValue} is a collection that maps keys of type TKey
     /// to values of type TValue. The keys are maintained in a sorted order, and at most one value
     /// is permitted for each key.
     /// </summary>
     /// <remarks>
-    /// <p>The keys are compared in one of three ways. If TKey implements IComparable&lt;TKey&gt; or IComparable,
+    /// <p>The keys are compared in one of three ways. If TKey implements <see cref="IComparable{TKey}"/> or IComparable,
     /// then the CompareTo method of that interface will be used to compare elements. Alternatively, a comparison
-    /// function can be passed in either as a delegate, or as an instance of IComparer&lt;TKey&gt;.</p>
+    /// function can be passed in either as a delegate, or as an instance of IComparer{TKey}.</p>
     /// <p>OrderedDictionary is implemented as a balanced binary tree. Inserting, deleting, and looking up an
     /// an element all are done in log(N) type, where N is the number of keys in the tree.</p>
-    /// <p><see cref="Dictionary&lt;TKey,TValue&gt;"/> is similar, but uses hashing instead of comparison, and does not maintain
+    /// <p><see cref="Dictionary{TKey,TValue}"/> is similar, but uses hashing instead of comparison, and does not maintain
     /// the keys in sorted order.</p>
     ///</remarks>
-    ///<seealso cref="Dictionary&lt;TKey,TValue&gt;"/>
+    ///<seealso cref="Dictionary{TKey,TValue}"/>
     [Serializable]
     public class OrderedDictionary<TKey, TValue> : DictionaryBase<TKey, TValue>, ICloneable
     {
@@ -53,11 +53,11 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// Creates a new OrderedDictionary. The TKey must implemented IComparable&lt;TKey&gt;
+        /// Creates a new OrderedDictionary. The TKey must implemented <see cref="IComparable{TKey}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare keys in this dictionary.
         /// </summary>
-        /// <exception cref="InvalidOperationException">TKey does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">TKey does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedDictionary() :
             this(Comparers.DefaultComparer<TKey>())
         {
@@ -68,9 +68,9 @@ namespace netCollections.Sorted
         /// will be used to compare keys in this dictionary.
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;TKey&gt; will never
+        /// The GetHashCode and Equals methods of the provided IComparer{TKey} will never
         /// be called, and need not be implemented.</remarks>
-        /// <param name="comparer">An instance of IComparer&lt;TKey&gt; that will be used to compare keys.</param>
+        /// <param name="comparer">An instance of IComparer{TKey} that will be used to compare keys.</param>
         public OrderedDictionary(IComparer<TKey> comparer) :
             this(null, comparer, Comparers.ComparerKeyValueFromComparerKey<TKey, TValue>(comparer))
         {
@@ -88,14 +88,14 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// <para>Creates a new OrderedDictionary. The TKey must implemented IComparable&lt;TKey&gt;
+        /// <para>Creates a new OrderedDictionary. The TKey must implemented <see cref="IComparable{TKey}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare keys in this dictionary.</para>
         /// <para>A collection and keys and values (typically another dictionary) is used to initialized the 
         /// contents of the dictionary.</para>
         /// </summary>
         /// <param name="keysAndValues">A collection of keys and values whose contents are used to initialized the dictionary.</param>
-        /// <exception cref="InvalidOperationException">TKey does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">TKey does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> keysAndValues)
             : this(keysAndValues, Comparers.DefaultComparer<TKey>())
         {
@@ -108,10 +108,10 @@ namespace netCollections.Sorted
         /// contents of the dictionary.</para>
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;TKey&gt; will never
+        /// The GetHashCode and Equals methods of the provided IComparer{TKey} will never
         /// be called, and need not be implemented.</remarks>
         /// <param name="keysAndValues">A collection of keys and values whose contents are used to initialized the dictionary.</param>
-        /// <param name="comparer">An instance of IComparer&lt;TKey&gt; that will be used to compare keys.</param>
+        /// <param name="comparer">An instance of IComparer{TKey} that will be used to compare keys.</param>
         public OrderedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> keysAndValues, IComparer<TKey> comparer)
             : this(keysAndValues, comparer, Comparers.ComparerKeyValueFromComparerKey<TKey, TValue>(comparer))
         {
@@ -241,17 +241,17 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// Returns the IComparer&lt;T&gt; used to compare keys in this dictionary. 
+        /// Returns the <see cref="IComparer{T}"/> used to compare keys in this dictionary. 
         /// </summary>
         /// <value>If the dictionary was created using a comparer, that comparer is returned. If the dictionary was
         /// created using a comparison delegate, then a comparer equivalent to that delegate
         /// is returned. Otherwise
-        /// the default comparer for TKey (Comparer&lt;TKey&gt;.Default) is returned.</value>
+        /// the default comparer for TKey (Comparer{TKey}.Default) is returned.</value>
         public IComparer<TKey> Comparer
         {
             get
             {
-                return this.keyComparer;
+                return keyComparer;
             }
         }
 
@@ -263,7 +263,7 @@ namespace netCollections.Sorted
         ///<remarks>
         ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Reversed()) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Reversed()) {
         ///    // process pair
         /// }
         ///</code></p>
@@ -290,7 +290,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Range(from, true, to, false)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Range(from, true, to, false)) {
         ///    // process pair
         /// }
         ///</code>
@@ -321,7 +321,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.RangeFrom(from, true)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.RangeFrom(from, true)) {
         ///    // process pair
         /// }
         ///</code>
@@ -348,7 +348,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.RangeFrom(from, false)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.RangeFrom(from, false)) {
         ///    // process pair
         /// }
         ///</code>
@@ -461,7 +461,7 @@ namespace netCollections.Sorted
         /// <summary>
         /// Adds multiple key-value pairs to a dictionary. If a key exists in both the current instance and dictionaryToAdd,
         /// then the value is updated with the value from <paramref name="keysAndValues>"/> (no exception is thrown).
-        /// Since IDictionary&lt;TKey,TValue&gt; inherits from IEnumerable&lt;KeyValuePair&lt;TKey,TValue&gt;&gt;, this
+        /// Since <see cref="IDictionary{TKey,TValue}"/> inherits from IEnumerable{KeyValuePair{TKey,TValue}}, this
         /// method can be used to merge one dictionary into another.
         /// </summary>
         /// <remarks>AddMany takes time O(M log (N+M)), where M is the size of <paramref name="keysAndValues>"/>, and N is the size of
@@ -479,7 +479,7 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// Removes all the keys found in another collection (such as an array or List&lt;TKey&gt;). Each key in keyCollectionToRemove
+        /// Removes all the keys found in another collection (such as an array or List{TKey}). Each key in keyCollectionToRemove
         /// is removed from the dictionary. Keys that are not present are ignored.
         /// </summary>
         /// <remarks>RemoveMany takes time O(M log N), where M is the size of keyCollectionToRemove, and N is this
@@ -495,7 +495,7 @@ namespace netCollections.Sorted
 
             foreach (TKey key in keyCollectionToRemove)
             {
-                if (this.Remove(key))
+                if (Remove(key))
                     ++count;
             }
 
@@ -582,7 +582,7 @@ namespace netCollections.Sorted
 
         /// <summary>
         /// Returns an enumerator that enumerates all the entries in the dictionary. Each entry is 
-        /// returned as a KeyValuePair&lt;TKey,TValue&gt;.
+        /// returned as a KeyValuePair{TKey,TValue}.
         /// The entries are enumerated in the sorted order of the keys.
         /// </summary>
         /// <remarks>
@@ -615,7 +615,7 @@ namespace netCollections.Sorted
         #endregion
 
         /// <summary>
-        /// The OrderedDictionary&lt;TKey,TValue&gt;.View class is used to look at a subset of the keys and values
+        /// The OrderedDictionary{TKey,TValue}.View class is used to look at a subset of the keys and values
         /// inside an ordered dictionary. It is returned from the Range, RangeTo, RangeFrom, and Reversed methods. 
         /// </summary>
         ///<remarks>
@@ -624,7 +624,7 @@ namespace netCollections.Sorted
         ///<p>Typically, this class is used in conjunction with a foreach statement to enumerate the keys
         /// and values in a subset of the OrderedDictionary. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Range(from, to)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Range(from, to)) {
         ///    // process pair
         /// }
         ///</code>

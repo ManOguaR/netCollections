@@ -5,7 +5,7 @@ namespace netCollections
 {
     /// <summary>
     /// DictionaryBase is a base class that can be used to more easily implement the
-    /// generic IDictionary&lt;T&gt; and non-generic IDictionary interfaces.
+    /// generic <see cref="IDictionary{T}"/> and non-generic <see cref="IDictionary"/> interfaces.
     /// </summary>
     /// <remarks>
     /// <para>To use DictionaryBase as a base class, the derived class must override
@@ -140,12 +140,12 @@ namespace netCollections
         }
 
         /// <summary>
-        /// Provides a read-only view of this dictionary. The returned IDictionary&lt;TKey,TValue&gt; provides
+        /// Provides a read-only view of this dictionary. The returned <see cref="IDictionary{TKey,TValue}"/> provides
         /// a view of the dictionary that prevents modifications to the dictionary. Use the method to provide
         /// access to the dictionary without allowing changes. Since the returned object is just a view,
         /// changes to the dictionary will be reflected in the view.
         /// </summary>
-        /// <returns>An IIDictionary&lt;TKey,TValue&gt; that provides read-only access to the dictionary.</returns>
+        /// <returns>An IIDictionary{TKey,TValue} that provides read-only access to the dictionary.</returns>
         public virtual new IDictionary<TKey, TValue> AsReadOnly()
         {
             return Algorithms.ReadOnly(this);
@@ -185,12 +185,12 @@ namespace netCollections
         /// <param name="item">A KeyValuePair contains the Key and Value to add.</param>
         public override void Add(KeyValuePair<TKey, TValue> item)
         {
-            this.Add(item.Key, item.Value);
+            Add(item.Key, item.Value);
         }
 
         /// <summary>
         /// Determines if a dictionary contains a given KeyValuePair. This implementation checks to see if the
-        /// dictionary contains the given key, and if the value associated with the key is equal to (via object.Equals)
+        /// dictionary contains the given key, and if the value associated with the key is equal to (via <see cref="object.Equals"/>)
         /// the value.
         /// </summary>
         /// <param name="item">A KeyValuePair containing the Key and Value to check for.</param>
@@ -209,7 +209,7 @@ namespace netCollections
 
         /// <summary>
         /// Determines if a dictionary contains a given KeyValuePair, and if so, removes it. This implementation checks to see if the
-        /// dictionary contains the given key, and if the value associated with the key is equal to (via object.Equals)
+        /// dictionary contains the given key, and if the value associated with the key is equal to (via <see cref="object.Equals"/>)
         /// the value. If so, the key-value pair is removed.
         /// </summary>
         /// <param name="item">A KeyValuePair containing the Key and Value to check for.</param>
@@ -217,14 +217,14 @@ namespace netCollections
         public override bool Remove(KeyValuePair<TKey, TValue> item)
         {
             if (((ICollection<KeyValuePair<TKey, TValue>>)this).Contains(item))
-                return this.Remove(item.Key);
+                return Remove(item.Key);
             else
                 return false;
         }
 
         #endregion
 
-        #region IDictionary Members
+        #region <see cref="IDictionary"/> Members
 
         /// <summary>
         /// Check that the given parameter is of the expected generic type. Throw an ArgumentException
@@ -259,7 +259,7 @@ namespace netCollections
         /// </summary>
         void IDictionary.Clear()
         {
-            this.Clear();
+            Clear();
         }
 
         /// <summary>
@@ -302,7 +302,7 @@ namespace netCollections
         {
             // You can't implement this directly with an iterator, because iterators automatically implement
             // IEnumerator, not IDictionaryEnumerator. We use the helper class DictionaryEnumeratorWrapper.
-            return new DictionaryEnumeratorWrapper(this.GetEnumerator());
+            return new DictionaryEnumeratorWrapper(GetEnumerator());
         }
 
         /// <summary>
@@ -371,8 +371,8 @@ namespace netCollections
                 {
                     TKey theKey = (TKey)key;
 
-                    // The IDictionary (non-generic) indexer returns null for not found, instead of
-                    // throwing an exception like the generic IDictionary indexer.
+                    // The <see cref="IDictionary"/> (non-generic) indexer returns null for not found, instead of
+                    // throwing an exception like the generic <see cref="IDictionary"/> indexer.
                     if (TryGetValue(theKey, out TValue theValue))
                         return theValue;
                     else
@@ -396,9 +396,9 @@ namespace netCollections
         /// <summary>
         /// Display the contents of the dictionary in the debugger. This is intentionally private, it is called
         /// only from the debugger due to the presence of the DebuggerDisplay attribute. It is similar
-        /// format to ToString(), but is limited to 250-300 characters or so, so as not to overload the debugger.
+        /// format to <see cref="ToString()"/>, but is limited to 250-300 characters or so, so as not to overload the debugger.
         /// </summary>
-        /// <returns>The string representation of the items in the collection, similar in format to ToString().</returns>
+        /// <returns>The string representation of the items in the collection, similar in format to <see cref="ToString()"/>.</returns>
         new internal string DebuggerDisplayString()
         {
             const int MAXLENGTH = 250;
@@ -443,7 +443,7 @@ namespace netCollections
         #region Keys and Values collections
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TKey&gt; and ICollection for the
+        /// A private class that implements ICollection{TKey} and ICollection for the
         /// Keys collection. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -478,7 +478,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TValue&gt; and ICollection for the
+        /// A private class that implements ICollection{TValue} and ICollection for the
         /// Values collection. The collection is read-only.
         /// </summary>
         [Serializable]

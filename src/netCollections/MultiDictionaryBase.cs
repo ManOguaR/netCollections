@@ -5,7 +5,7 @@ namespace netCollections
     /// <summary>
     /// MultiDictionaryBase is a base class that can be used to more easily implement a class
     /// that associates multiple values to a single key. The class implements the generic
-    /// IDictionary&lt;TKey, ICollection&lt;TValue&gt;&gt; interface.
+    /// IDictionary{TKey, ICollection{TValue}} interface.
     /// </summary>
     /// <remarks>
     /// <para>To use MultiDictionaryBase as a base class, the derived class must override
@@ -40,7 +40,7 @@ namespace netCollections
         /// Enumerate all the keys in the dictionary. This method must be overridden by a derived
         /// class.
         /// </summary>
-        /// <returns>An IEnumerator&lt;TKey&gt; that enumerates all of the keys in the collection that
+        /// <returns>An IEnumerator{TKey} that enumerates all of the keys in the collection that
         /// have at least one value associated with them.</returns>
         protected abstract IEnumerator<TKey> EnumerateKeys();
 
@@ -63,11 +63,11 @@ namespace netCollections
         /// <param name="item">A KeyValuePair contains the Key and Value collection to add.</param>
         public override void Add(KeyValuePair<TKey, ICollection<TValue>> item)
         {
-            this.AddMany(item.Key, item.Value);
+            AddMany(item.Key, item.Value);
         }
 
         /// <summary>
-        /// Implements IDictionary&lt;TKey, IEnumerable&lt;TValue&gt;&gt;.Add. If the 
+        /// Implements IDictionary{TKey, IEnumerable{TValue}}.Add. If the 
         /// key is already present, and ArgumentException is thrown. Otherwise, a
         /// new key is added, and new values are associated with that key.
         /// </summary>
@@ -301,7 +301,7 @@ namespace netCollections
         /// <summary>
         /// Gets a read-only collection all the keys in this dictionary.
         /// </summary>
-        /// <value>An readonly ICollection&lt;TKey&gt; of all the keys in this dictionary.</value>
+        /// <value>An readonly ICollection{TKey} of all the keys in this dictionary.</value>
         public virtual ICollection<TKey> Keys
         {
             get { return new KeysCollection(this); }
@@ -310,7 +310,7 @@ namespace netCollections
         /// <summary>
         /// Gets a read-only collection of all the values in the dictionary. 
         /// </summary>
-        /// <returns>A read-only ICollection&lt;TValue&gt; of all the values in the dictionary.</returns>
+        /// <returns>A read-only ICollection{TValue} of all the values in the dictionary.</returns>
         public virtual ICollection<TValue> Values
         {
             get { return new ValuesCollection(this); }
@@ -319,7 +319,7 @@ namespace netCollections
         /// <summary>
         /// Gets a read-only collection of all the value collections in the dictionary. 
         /// </summary>
-        /// <returns>A read-only ICollection&lt;IEnumerable&lt;TValue&gt;&gt; of all the values in the dictionary.</returns>
+        /// <returns>A read-only ICollection{IEnumerable{TValue}} of all the values in the dictionary.</returns>
         ICollection<ICollection<TValue>> IDictionary<TKey, ICollection<TValue>>.Values
         {
             get { return new EnumerableValuesCollection(this); }
@@ -343,7 +343,7 @@ namespace netCollections
         /// modify the collection of values associated with the key.
         /// </summary>
         /// <param name="key">The key to get the values associated with.</param>
-        /// <value>An ICollection&lt;TValue&gt; with all the values associated with <paramref name="key"/>.</value>
+        /// <value>An ICollection{TValue} with all the values associated with <paramref name="key"/>.</value>
         public virtual ICollection<TValue> this[TKey key]
         {
             get
@@ -362,7 +362,7 @@ namespace netCollections
         /// If the key is not present in the dictionary, a KeyNotFound exception is thrown.
         /// </summary>
         /// <param name="key">The key to get the values associated with.</param>
-        /// <value>An IEnumerable&lt;TValue&gt; that enumerates all the values associated with <paramref name="key"/>.</value>
+        /// <value>An IEnumerable{TValue} that enumerates all the values associated with <paramref name="key"/>.</value>
         /// <exception cref="KeyNotFoundException">The given key is not present in the dictionary.</exception>
         ICollection<TValue> IDictionary<TKey, ICollection<TValue>>.this[TKey key]
         {
@@ -526,7 +526,7 @@ namespace netCollections
         /// <summary>
         /// Enumerate all the keys in the dictionary, and for each key, the collection of values for that key.
         /// </summary>
-        /// <returns>An enumerator to enumerate all the key, ICollection&lt;value&gt; pairs in the dictionary.</returns>
+        /// <returns>An enumerator to enumerate all the key, ICollection{value} pairs in the dictionary.</returns>
         public override IEnumerator<KeyValuePair<TKey, ICollection<TValue>>> GetEnumerator()
         {
             using IEnumerator<TKey> enumKeys = EnumerateKeys();
@@ -540,7 +540,7 @@ namespace netCollections
         #region Keys and Values collections
 
         /// <summary>
-        /// A private class that provides the ICollection&lt;TValue&gt; for a particular key. This is the collection
+        /// A private class that provides the ICollection{TValue} for a particular key. This is the collection
         /// that is returned from the indexer. The collections is read-write, live, and can be used to add, remove,
         /// etc. values from the multi-dictionary.
         /// </summary>
@@ -600,10 +600,10 @@ namespace netCollections
             }
 
             /// <summary>
-            /// A simple function that returns an IEnumerator&lt;TValue&gt; that
+            /// A simple function that returns an IEnumerator{TValue} that
             /// doesn't yield any values. A helper.
             /// </summary>
-            /// <returns>An IEnumerator&lt;TValue&gt; that yields no values.</returns>
+            /// <returns>An IEnumerator{TValue} that yields no values.</returns>
             private static IEnumerator<TValue> NoValues()
             {
                 yield break;
@@ -612,7 +612,7 @@ namespace netCollections
             /// <summary>
             /// Enumerate all the values associated with key.
             /// </summary>
-            /// <returns>An IEnumerator&lt;TValue&gt; that enumerates all the values associated with key.</returns>
+            /// <returns>An IEnumerator{TValue} that enumerates all the values associated with key.</returns>
             public override IEnumerator<TValue> GetEnumerator()
             {
                 if (myDictionary.TryEnumerateValuesForKey(key, out IEnumerator<TValue> values))
@@ -633,7 +633,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TKey&gt; and ICollection for the
+        /// A private class that implements ICollection{TKey} and ICollection for the
         /// Keys collection. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -667,7 +667,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;TValue&gt; and ICollection for the
+        /// A private class that implements ICollection{TValue} and ICollection for the
         /// Values collection. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -714,7 +714,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;ICollection&lt;TValue&gt;&gt; and ICollection for the
+        /// A private class that implements ICollection{ICollection{TValue}} and ICollection for the
         /// Values collection on IDictionary. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -778,7 +778,7 @@ namespace netCollections
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;KeyValuePair&lt;TKey,TValue&gt;&gt; and ICollection for the
+        /// A private class that implements ICollection{KeyValuePair{TKey,TValue}} and ICollection for the
         /// KeyValuePairs collection. The collection is read-only.
         /// </summary>
         [Serializable]

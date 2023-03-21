@@ -6,21 +6,21 @@ using System.Internals;
 namespace netCollections.Sorted
 {
     /// <summary>
-    /// OrderedBag&lt;T&gt; is a collection that contains items of type T. 
+    /// <see cref="OrderedBag{T}"/> is a collection that contains items of type T. 
     /// The item are maintained in a sorted order. Unlike a OrderedSet, duplicate items (items that
     /// compare equal to each other) are allows in an OrderedBag.
     /// </summary>
     /// <remarks>
-    /// <p>The items are compared in one of three ways. If T implements IComparable&lt;TKey&gt; or IComparable,
+    /// <p>The items are compared in one of three ways. If T implements <see cref="IComparable{TKey}"/> or IComparable,
     /// then the CompareTo method of that interface will be used to compare items. Alternatively, a comparison
-    /// function can be passed in either as a delegate, or as an instance of IComparer&lt;TKey&gt;.</p>
+    /// function can be passed in either as a delegate, or as an instance of IComparer{TKey}.</p>
     /// <p>OrderedBag is implemented as a balanced binary tree. Inserting, deleting, and looking up an
     /// an element all are done in log(N) + M time, where N is the number of keys in the tree, and M is the current number
     /// of copies of the element being handled.</p>
-    /// <p><see cref="Bag&lt;T&gt;"/> is similar, but uses hashing instead of comparison, and does not maintain
+    /// <p><see cref="Bag{T}"/> is similar, but uses hashing instead of comparison, and does not maintain
     /// the keys in sorted order.</p>
     ///</remarks>
-    ///<seealso cref="Bag&lt;T&gt;"/>
+    ///<seealso cref="<see cref="Bag{T}"/>
     [Serializable]
     public class OrderedBag<T> : CollectionBase<T>, ICloneable
     {
@@ -33,14 +33,14 @@ namespace netCollections.Sorted
         #region Constructors
 
         /// <summary>
-        /// Creates a new OrderedBag. The T must implement IComparable&lt;T&gt;
+        /// Creates a new OrderedBag. The T must implement <see cref="IComparable{T}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare items in this bag.
         /// </summary>
         ///<remarks>
         /// Items that are null are permitted, and will be sorted before all other items.
         ///</remarks>
-        /// <exception cref="InvalidOperationException">T does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedBag() :
             this(Comparers.DefaultComparer<T>())
         {
@@ -60,10 +60,10 @@ namespace netCollections.Sorted
         /// will be used to compare items in this bag.
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;T&gt; will never
+        /// The GetHashCode and Equals methods of the provided <see cref="IComparer{T}"/> will never
         /// be called, and need not be implemented.
         /// </remarks>
-        /// <param name="comparer">An instance of IComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="comparer">An instance of <see cref="IComparer{T}"/> that will be used to compare items.</param>
         public OrderedBag(IComparer<T> comparer)
         {
             this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
@@ -71,7 +71,7 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// Creates a new OrderedBag. The T must implement IComparable&lt;T&gt;
+        /// Creates a new OrderedBag. The T must implement <see cref="IComparable{T}"/>
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare items in this bag. The bag is
         /// initialized with all the items in the given collection.
@@ -80,7 +80,7 @@ namespace netCollections.Sorted
         /// Items that are null are permitted, and will be sorted before all other items.
         ///</remarks>
         /// <param name="collection">A collection with items to be placed into the OrderedBag.</param>
-        /// <exception cref="InvalidOperationException">T does not implement IComparable&lt;TKey&gt;.</exception>
+        /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedBag(IEnumerable<T> collection) :
             this(collection, Comparers.DefaultComparer<T>())
         {
@@ -103,11 +103,11 @@ namespace netCollections.Sorted
         /// initialized with all the items in the given collection.
         /// </summary>
         /// <remarks>
-        /// The GetHashCode and Equals methods of the provided IComparer&lt;T&gt; will never
+        /// The GetHashCode and Equals methods of the provided <see cref="IComparer{T}"/> will never
         /// be called, and need not be implemented.
         /// </remarks>
         /// <param name="collection">A collection with items to be placed into the OrderedBag.</param>
-        /// <param name="comparer">An instance of IComparer&lt;T&gt; that will be used to compare items.</param>
+        /// <param name="comparer">An instance of <see cref="IComparer{T}"/> that will be used to compare items.</param>
         public OrderedBag(IEnumerable<T> collection, IComparer<T> comparer) :
             this(comparer)
         {
@@ -139,7 +139,7 @@ namespace netCollections.Sorted
         /// <returns>The cloned bag.</returns>
         object ICloneable.Clone()
         {
-            return this.Clone();
+            return Clone();
         }
 
         /// <summary>
@@ -198,17 +198,17 @@ namespace netCollections.Sorted
         #region Basic collection containment
 
         /// <summary>
-        /// Returns the IComparer&lt;T&gt; used to compare items in this bag. 
+        /// Returns the <see cref="IComparer{T}"/> used to compare items in this bag. 
         /// </summary>
         /// <value>If the bag was created using a comparer, that comparer is returned. If the bag was
         /// created using a comparison delegate, then a comparer equivalent to that delegate
         /// is returned. Otherwise
-        /// the default comparer for T (Comparer&lt;T&gt;.Default) is returned.</value>
+        /// the default comparer for T (Comparer{T}.Default) is returned.</value>
         public IComparer<T> Comparer
         {
             get
             {
-                return this.comparer;
+                return comparer;
             }
         }
 
@@ -278,7 +278,7 @@ namespace netCollections.Sorted
         /// <remarks>Enumeration the items in the bag equal to <paramref name="item"/> takes time O(log N + M), where N 
         /// is the total number of items in the bag, and M is the number of items equal to <paramref name="item"/>.</remarks>
         /// <param name="item">The item to search for.</param>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates all the items in the bag equal to <paramref name="item"/>. </returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates all the items in the bag equal to <paramref name="item"/>. </returns>
         public IEnumerable<T> GetEqualItems(T item)
         {
             return tree.EnumerateRange(tree.EqualRangeTester(item));
@@ -290,7 +290,7 @@ namespace netCollections.Sorted
         /// </summary>
         /// <remarks>If the bag is changed while items are being enumerated, the
         /// enumeration will terminate with an InvalidOperationException.</remarks>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates the unique items.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the unique items.</returns>
         public IEnumerable<T> DistinctItems()
         {
             T previous = default;
@@ -394,7 +394,7 @@ namespace netCollections.Sorted
             // If we're adding ourselves, we need to copy to a separate array to avoid modification
             // during enumeration.
             if (this == collection)
-                collection = this.ToArray();
+                collection = ToArray();
 
             foreach (T item in collection)
                 Add(item);
@@ -593,13 +593,13 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
 
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
                 return false;     // Can't be a superset of a bigger bag
 
             // Check each item in the other bag to make sure it is in this bag.
             foreach (T item in otherBag.DistinctItems())
             {
-                if (this.NumberOfCopies(item) < otherBag.NumberOfCopies(item))
+                if (NumberOfCopies(item) < otherBag.NumberOfCopies(item))
                     return false;
             }
 
@@ -622,7 +622,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
 
-            if (otherBag.Count >= this.Count)
+            if (otherBag.Count >= Count)
                 return false;     // Can't be a proper superset of a bigger or equal set
 
             return IsSupersetOf(otherBag);
@@ -676,7 +676,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
             OrderedBag<T> smaller, larger;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -709,11 +709,11 @@ namespace netCollections.Sorted
             CheckConsistentComparison(otherBag);
 
             // Must be the same size.
-            if (otherBag.Count != this.Count)
+            if (otherBag.Count != Count)
                 return false;
 
             // Since both bags are ordered, we can simply compare items in order.
-            using IEnumerator<T> enum1 = this.GetEnumerator(), enum2 = otherBag.GetEnumerator();
+            using IEnumerator<T> enum1 = GetEnumerator(), enum2 = otherBag.GetEnumerator();
             bool continue1, continue2;
 
             for (; ; )
@@ -759,7 +759,7 @@ namespace netCollections.Sorted
             {
                 if (atBeginning || comparer.Compare(item, previous) != 0)
                 {
-                    copiesInThis = this.NumberOfCopies(item);
+                    copiesInThis = NumberOfCopies(item);
                     copiesInOther = 1;
                 }
                 else
@@ -768,7 +768,7 @@ namespace netCollections.Sorted
                 }
 
                 if (copiesInOther > copiesInThis)
-                    this.Add(item);
+                    Add(item);
 
                 previous = item;
                 atBeginning = false;
@@ -794,7 +794,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
             OrderedBag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -850,7 +850,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
             OrderedBag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -885,7 +885,7 @@ namespace netCollections.Sorted
             tree.StopEnumerations();
 
             OrderedBag<T> smaller, larger;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -945,7 +945,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
             OrderedBag<T> smaller, larger, result;
-            if (otherBag.Count > this.Count)
+            if (otherBag.Count > Count)
             {
                 smaller = this; larger = otherBag;
             }
@@ -1016,7 +1016,7 @@ namespace netCollections.Sorted
             {
                 if (atBeginning || comparer.Compare(item, previous) != 0)
                 {
-                    copiesInThis = this.NumberOfCopies(item);
+                    copiesInThis = NumberOfCopies(item);
                     copiesInOther = 1;
                 }
                 else
@@ -1025,7 +1025,7 @@ namespace netCollections.Sorted
                 }
 
                 if (copiesInOther <= copiesInThis)
-                    this.Remove(item);
+                    Remove(item);
 
                 previous = item;
                 atBeginning = false;
@@ -1051,7 +1051,7 @@ namespace netCollections.Sorted
         public OrderedBag<T> Difference(OrderedBag<T> otherBag)
         {
             CheckConsistentComparison(otherBag);
-            OrderedBag<T> result = this.Clone();
+            OrderedBag<T> result = Clone();
             result.DifferenceWith(otherBag);
             return result;
         }
@@ -1093,7 +1093,7 @@ namespace netCollections.Sorted
         {
             CheckConsistentComparison(otherBag);
             OrderedBag<T> result = new(comparer);
-            IEnumerator<T> enum1 = this.GetEnumerator(), enum2 = otherBag.GetEnumerator();
+            IEnumerator<T> enum1 = GetEnumerator(), enum2 = otherBag.GetEnumerator();
 
             bool valid1 = enum1.MoveNext();
             bool valid2 = enum2.MoveNext();
@@ -1144,7 +1144,7 @@ namespace netCollections.Sorted
         /// at index 0. This view does not copy any data, and reflects any
         /// changes to the underlying OrderedBag.
         /// </summary>
-        /// <returns>A read-only IList&lt;T&gt; view onto this OrderedBag.</returns>
+        /// <returns>A read-only <see cref="IList{T}"/> view onto this OrderedBag.</returns>
         public IList<T> AsList()
         {
             return new ListView(this, tree.EntireRangeTester, true, false);
@@ -1370,7 +1370,7 @@ namespace netCollections.Sorted
         #region View nested class
 
         /// <summary>
-        /// The OrderedBag&lt;T&gt;.View class is used to look at a subset of the items
+        /// The <see cref="OrderedBag{T}.View"/> class is used to look at a subset of the items
         /// inside an ordered bag. It is returned from the Range, RangeTo, RangeFrom, and Reversed methods. 
         /// </summary>
         ///<remarks>
@@ -1420,7 +1420,7 @@ namespace netCollections.Sorted
             /// <summary>
             /// Enumerate all the items in this view.
             /// </summary>
-            /// <returns>An IEnumerator&lt;T&gt; with the items in this view.</returns>
+            /// <returns>An <see cref="IEnumerator{T}"/> with the items in this view.</returns>
             public sealed override IEnumerator<T> GetEnumerator()
             {
                 if (reversed)
@@ -1673,7 +1673,7 @@ namespace netCollections.Sorted
             /// at index 0. This view does not copy any data, and reflects any
             /// changes to the underlying OrderedSet.
             /// </summary>
-            /// <returns>A read-only IList&lt;T&gt; view onto this view.</returns>
+            /// <returns>A read-only <see cref="IList{T}"/> view onto this view.</returns>
             public IList<T> AsList()
             {
                 return new ListView(myBag, rangeTester, entireTree, reversed);

@@ -6,14 +6,14 @@ namespace netCollections
 {
     /// <summary>
     /// ReadOnlyCollectionBase is a base class that can be used to more easily implement the
-    /// generic ICollection&lt;T&gt; and non-generic ICollection interfaces for a read-only collection:
+    /// generic <see cref="ICollection{T}"/> and non-generic ICollection interfaces for a read-only collection:
     /// a collection that does not allow adding or removing elements.
     /// </summary>
     /// <remarks>
     /// <para>To use ReadOnlyCollectionBase as a base class, the derived class must override
     /// the Count and GetEnumerator methods. </para>
-    /// <para>ICollection&lt;T&gt;.Contains need not be implemented by the
-    /// derived class, but it should be strongly considered, because the ReadOnlyCollectionBase implementation
+    /// <para><see cref="ICollection{T}.Contains"/> need not be implemented by the
+    /// derived class, but it should be strongly considered, because the <see cref="ReadOnlyCollectionBase"/> implementation
     /// may not be very efficient.</para>
     /// </remarks>
     /// <typeparam name="T">The item type of the collection.</typeparam>
@@ -26,7 +26,7 @@ namespace netCollections
         /// </summary>
         private void MethodModifiesCollection()
         {
-            throw new NotSupportedException(string.Format(Strings.CannotModifyCollection, Util.SimpleClassName(this.GetType())));
+            throw new NotSupportedException(string.Format(Strings.CannotModifyCollection, Util.SimpleClassName(GetType())));
         }
 
         #region Delegate operations
@@ -92,7 +92,7 @@ namespace netCollections
         /// by <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">A delegate that defines the condition to check for.</param>
-        /// <returns>An IEnumerable&lt;T&gt; that enumerates the items that satisfy the condition.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> that enumerates the items that satisfy the condition.</returns>
         public IEnumerable<T> FindAll(Predicate<T> predicate)
         {
             if (predicate == null)
@@ -120,7 +120,7 @@ namespace netCollections
         /// </summary>
         /// <typeparam name="TOutput">The type each item is being converted to.</typeparam>
         /// <param name="converter">A delegate to the method to call, passing each item in this collection.</param>
-        /// <returns>An IEnumerable&lt;TOutput^gt; that enumerates the resulting collection from applying <paramref name="converter"/> to each item in this collection in
+        /// <returns>An IEnumerable{TOutput^gt; that enumerates the resulting collection from applying <paramref name="converter"/> to each item in this collection in
         /// order.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/> is null.</exception>
         public virtual IEnumerable<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
@@ -171,7 +171,7 @@ namespace netCollections
         /// <summary>
         /// Determines if the collection contains a particular item. This default implementation
         /// iterates all of the items in the collection via GetEnumerator, testing each item
-        /// against <paramref name="item"/> using IComparable&lt;T&gt;.Equals or
+        /// against <paramref name="item"/> using <see cref="IComparable{T}.CompareTo"/> or
         /// Object.Equals.
         /// </summary>
         /// <remarks>You should strongly consider overriding this method to provide
@@ -198,7 +198,7 @@ namespace netCollections
         /// <param name="arrayIndex">Starting index in <paramref name="array"/> to copy to.</param>
         public virtual void CopyTo(T[] array, int arrayIndex)
         {
-            int count = this.Count;
+            int count = Count;
 
             if (count == 0)
                 return;
@@ -232,7 +232,7 @@ namespace netCollections
         /// <returns>An array containing all the elements in the collection, in order.</returns>
         public virtual T[] ToArray()
         {
-            int count = this.Count;
+            int count = Count;
 
             T[] array = new T[count];
             CopyTo(array, 0);
@@ -262,7 +262,7 @@ namespace netCollections
         /// <summary>
         /// Must be overridden to enumerate all the members of the collection.
         /// </summary>
-        /// <returns>A generic IEnumerator&lt;T&gt; that can be used
+        /// <returns>A generic <see cref="IEnumerator{T}"/> that can be used
         /// to enumerate all the items in the collection.</returns>
         public abstract IEnumerator<T> GetEnumerator();
 
@@ -279,7 +279,7 @@ namespace netCollections
         /// <param name="index">Starting index in <paramref name="array"/> to copy to.</param>
         void ICollection.CopyTo(Array array, int index)
         {
-            int count = this.Count;
+            int count = Count;
 
             if (count == 0)
                 return;
@@ -330,7 +330,7 @@ namespace netCollections
 
         /// <summary>
         /// Provides an IEnumerator that can be used to iterate all the members of the
-        /// collection. This implementation uses the IEnumerator&lt;T&gt; that was overridden
+        /// collection. This implementation uses the <see cref="IEnumerator{T}"/> that was overridden
         /// by the derived classes to enumerate the members of the collection.
         /// </summary>
         /// <returns>An IEnumerator that can be used to iterate the collection.</returns>

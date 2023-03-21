@@ -26,7 +26,7 @@ namespace System.Utils.Sorting
         #region IComparer Members
         int IComparer.Compare(Object x, Object y)
         {
-            return this.Compare((IComparable)x, y);
+            return Compare((IComparable)x, y);
         }
         #endregion
     }

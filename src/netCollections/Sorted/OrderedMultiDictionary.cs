@@ -13,8 +13,8 @@ namespace netCollections.Sorted
     /// </summary>
     /// <typeparam name="TKey">The type of the keys.</typeparam>
     /// <typeparam name="TValue">The of values associated with the keys.</typeparam>
-    ///<seealso cref="MultiDictionary&lt;TKey,TValue&gt;"/>
-    ///<seealso cref="OrderedDictionary&lt;TKey,TValue&gt;"/>
+    ///<seealso cref="MultiDictionary{TKey,TValue}"/>
+    ///<seealso cref="OrderedDictionary{TKey,TValue}"/>
     [Serializable]
     public class OrderedMultiDictionary<TKey, TValue> : MultiDictionaryBase<TKey, TValue>, ICloneable
     {
@@ -178,10 +178,10 @@ namespace netCollections.Sorted
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <remarks>The default ordering of keys and values will be used, as defined by TKey and TValue's implementation
-        /// of IComparable&lt;T&gt; (or IComparable if IComparable&lt;T&gt; is not implemented). If a different ordering should be
+        /// of <see cref="IComparable{T}"/> (or IComparable if <see cref="IComparable{T}"/> is not implemented). If a different ordering should be
         /// used, other constructors allow a custom Comparer or IComparer to be passed to changed the ordering.</remarks>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <exception cref="InvalidOperationException">TKey or TValue does not implement either IComparable&lt;T&gt; or IComparable.</exception>
+        /// <exception cref="InvalidOperationException">TKey or TValue does not implement either <see cref="IComparable{T}"/> or IComparable.</exception>
         public OrderedMultiDictionary(bool allowDuplicateValues)
             : this(allowDuplicateValues, Comparers.DefaultComparer<TKey>(), Comparers.DefaultComparer<TValue>())
         {
@@ -196,7 +196,7 @@ namespace netCollections.Sorted
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
         /// <param name="keyComparison">A delegate to a method that will be used to compare keys.</param>
-        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable&lt;TValue&gt; or IComparable.</exception>
+        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable{TValue} or IComparable.</exception>
         public OrderedMultiDictionary(bool allowDuplicateValues, Comparison<TKey> keyComparison)
             : this(allowDuplicateValues, Comparers.ComparerFromComparison(keyComparison), Comparers.DefaultComparer<TValue>())
         {
@@ -225,8 +225,8 @@ namespace netCollections.Sorted
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <param name="keyComparer">An IComparer&lt;TKey&gt; instance that will be used to compare keys.</param>
-        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable&lt;TValue&gt; or IComparable.</exception>
+        /// <param name="keyComparer">An IComparer{TKey} instance that will be used to compare keys.</param>
+        /// <exception cref="InvalidOperationException">TValue does not implement either IComparable{TValue} or IComparable.</exception>
         public OrderedMultiDictionary(bool allowDuplicateValues, IComparer<TKey> keyComparer)
             : this(allowDuplicateValues, keyComparer, Comparers.DefaultComparer<TValue>())
         {
@@ -240,15 +240,15 @@ namespace netCollections.Sorted
         /// have "a" and "b" associated with it, which key "bar" has values "b" and "c" associated with it.
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
-        /// <param name="keyComparer">An IComparer&lt;TKey&gt; instance that will be used to compare keys.</param>
-        /// <param name="valueComparer">An IComparer&lt;TValue&gt; instance that will be used to compare values.</param>
+        /// <param name="keyComparer">An IComparer{TKey} instance that will be used to compare keys.</param>
+        /// <param name="valueComparer">An IComparer{TValue} instance that will be used to compare values.</param>
         public OrderedMultiDictionary(bool allowDuplicateValues, IComparer<TKey> keyComparer, IComparer<TValue> valueComparer)
         {
             this.allowDuplicateValues = allowDuplicateValues;
             this.keyComparer = keyComparer ?? throw new ArgumentNullException(nameof(keyComparer));
             this.valueComparer = valueComparer ?? throw new ArgumentNullException(nameof(valueComparer));
-            this.comparer = Comparers.ComparerPairFromKeyValueComparers(keyComparer, valueComparer);
-            this.tree = new RedBlackTree<KeyValuePair<TKey, TValue>>(this.comparer);
+            comparer = Comparers.ComparerPairFromKeyValueComparers(keyComparer, valueComparer);
+            tree = new RedBlackTree<KeyValuePair<TKey, TValue>>(comparer);
         }
 
         /// <summary>
@@ -256,8 +256,8 @@ namespace netCollections.Sorted
         /// </summary>
         /// <param name="allowDuplicateValues">Can the same value be associated with a key multiple times?</param>
         /// <param name="keyCount">Number of keys.</param>
-        /// <param name="keyComparer">An IComparer&lt;TKey&gt; instance that will be used to compare keys.</param>
-        /// <param name="valueComparer">An IComparer&lt;TValue&gt; instance that will be used to compare values.</param>
+        /// <param name="keyComparer">An IComparer{TKey} instance that will be used to compare keys.</param>
+        /// <param name="valueComparer">An IComparer{TValue} instance that will be used to compare values.</param>
         /// <param name="comparer">Comparer of key-value pairs.</param>
         /// <param name="tree">The red-black tree used to store the data.</param>
         private OrderedMultiDictionary(bool allowDuplicateValues, int keyCount, IComparer<TKey> keyComparer, IComparer<TValue> valueComparer, IComparer<KeyValuePair<TKey, TValue>> comparer, RedBlackTree<KeyValuePair<TKey, TValue>> tree)
@@ -346,32 +346,32 @@ namespace netCollections.Sorted
         #region Query items
 
         /// <summary>
-        /// Returns the IComparer&lt;T&gt; used to compare keys in this dictionary. 
+        /// Returns the <see cref="IComparer{T}"/> used to compare keys in this dictionary. 
         /// </summary>
         /// <value>If the dictionary was created using a comparer, that comparer is returned. If the dictionary was
         /// created using a comparison delegate, then a comparer equivalent to that delegate
         /// is returned. Otherwise
-        /// the default comparer for TKey (Comparer&lt;TKey&gt;.Default) is returned.</value>
+        /// the default comparer for TKey (Comparer{TKey}.Default) is returned.</value>
         public IComparer<TKey> KeyComparer
         {
             get
             {
-                return this.keyComparer;
+                return keyComparer;
             }
         }
 
         /// <summary>
-        /// Returns the IComparer&lt;T&gt; used to compare values in this dictionary. 
+        /// Returns the <see cref="IComparer{T}"/> used to compare values in this dictionary. 
         /// </summary>
         /// <value>If the dictionary was created using a comparer, that comparer is returned. If the dictionary was
         /// created using a comparison delegate, then a comparer equivalent to that delegate
         /// is returned. Otherwise
-        /// the default comparer for TValue (Comparer&lt;TValue&gt;.Default) is returned.</value>
+        /// the default comparer for TValue (Comparer{TValue}.Default) is returned.</value>
         public IComparer<TValue> ValueComparer
         {
             get
             {
-                return this.valueComparer;
+                return valueComparer;
             }
         }
 
@@ -430,7 +430,7 @@ namespace netCollections.Sorted
         /// </summary>
         /// <param name="rangeTester">Defines the range to enumerate.</param>
         /// <param name="reversed">Should the keys be enumerated in reverse order?</param>
-        /// <returns>An IEnumerable&lt;TKey&gt; that enumerates the keys in the given range.
+        /// <returns>An IEnumerable{TKey} that enumerates the keys in the given range.
         /// in the dictionary.</returns>
         private IEnumerator<TKey> EnumerateKeys(RedBlackTree<KeyValuePair<TKey, TValue>>.RangeTester rangeTester, bool reversed)
         {
@@ -463,7 +463,7 @@ namespace netCollections.Sorted
         /// can't use the yield return construct.
         /// </summary>
         /// <param name="key"></param>
-        /// <returns>An IEnumerable&lt;TValue&gt; that can be used to enumerate all the
+        /// <returns>An IEnumerable{TValue} that can be used to enumerate all the
         /// values associated with <paramref name="key"/>. If <paramref name="key"/> is not present,
         /// an enumerable that enumerates no items is returned.</returns>
         private IEnumerator<TValue> EnumerateValuesForKey(TKey key)
@@ -497,7 +497,7 @@ namespace netCollections.Sorted
         /// <summary>
         /// Enumerate all of the keys in the dictionary.
         /// </summary>
-        /// <returns>An IEnumerator&lt;TKey&gt; of all of the keys in the dictionary.</returns>
+        /// <returns>An IEnumerator{TKey} of all of the keys in the dictionary.</returns>
         protected sealed override IEnumerator<TKey> EnumerateKeys()
         {
             return EnumerateKeys(tree.EntireRangeTester, false);
@@ -628,7 +628,7 @@ namespace netCollections.Sorted
         }
 
         /// <summary>
-        /// A private class that implements ICollection&lt;KeyValuePair&lt;TKey,TValue&gt;&gt; and ICollection for the
+        /// A private class that implements ICollection{KeyValuePair{TKey,TValue}} and ICollection for the
         /// KeyValuePairs collection. The collection is read-only.
         /// </summary>
         [Serializable]
@@ -668,7 +668,7 @@ namespace netCollections.Sorted
         ///<remarks>
         ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Reversed()) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Reversed()) {
         ///    // process pair
         /// }
         ///</code></p>
@@ -695,7 +695,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Range(from, true, to, false)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Range(from, true, to, false)) {
         ///    // process pair
         /// }
         ///</code>
@@ -726,7 +726,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.RangeFrom(from, true)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.RangeFrom(from, true)) {
         ///    // process pair
         /// }
         ///</code>
@@ -753,7 +753,7 @@ namespace netCollections.Sorted
         /// to create the dictionary.</p>
         ///<p>Typically, this property is used in conjunction with a foreach statement. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.RangeFrom(from, false)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.RangeFrom(from, false)) {
         ///    // process pair
         /// }
         ///</code>
@@ -772,7 +772,7 @@ namespace netCollections.Sorted
         #endregion Views
 
         /// <summary>
-        /// The OrderedMultiDictionary&lt;TKey,TValue&gt;.View class is used to look at a subset of the keys and values
+        /// The OrderedMultiDictionary{TKey,TValue}.View class is used to look at a subset of the keys and values
         /// inside an ordered multi-dictionary. It is returned from the Range, RangeTo, RangeFrom, and Reversed methods. 
         /// </summary>
         ///<remarks>
@@ -781,7 +781,7 @@ namespace netCollections.Sorted
         ///<p>Typically, this class is used in conjunction with a foreach statement to enumerate the keys
         /// and values in a subset of the OrderedMultiDictionary. For example:</p>
         ///<code>
-        /// foreach(KeyValuePair&lt;TKey, TValue&gt; pair in dictionary.Range(from, to)) {
+        /// foreach(KeyValuePair{TKey, TValue} pair in dictionary.Range(from, to)) {
         ///    // process pair
         /// }
         ///</code>
@@ -822,7 +822,7 @@ namespace netCollections.Sorted
             /// <summary>
             /// Enumerate all the keys in the dictionary. 
             /// </summary>
-            /// <returns>An IEnumerator&lt;TKey&gt; that enumerates all of the keys in the collection that
+            /// <returns>An IEnumerator{TKey} that enumerates all of the keys in the collection that
             /// have at least one value associated with them.</returns>
             protected sealed override IEnumerator<TKey> EnumerateKeys()
             {
@@ -978,7 +978,7 @@ namespace netCollections.Sorted
                 }
                 else
                 {
-                    myDictionary.keyCount -= this.Count;
+                    myDictionary.keyCount -= Count;
                     myDictionary.tree.DeleteRange(rangeTester);
                 }
             }

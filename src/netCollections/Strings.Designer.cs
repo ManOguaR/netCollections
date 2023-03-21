@@ -250,7 +250,7 @@ namespace netCollections {
         }
         
         /// <summary>
-        ///   Busca una cadena traducida similar a Type &quot;{0}&quot; does not implement IComparable&lt;{0}&gt; or IComparable..
+        ///   Busca una cadena traducida similar a Type &quot;{0}&quot; does not implement IComparable{{0}} or IComparable..
         /// </summary>
         internal static string UncomparableType {
             get {
