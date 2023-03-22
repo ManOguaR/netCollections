@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/ManOguaR/netCollections</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/ManOguaR/netCollections</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
