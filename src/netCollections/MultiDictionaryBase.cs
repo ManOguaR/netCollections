@@ -206,7 +206,7 @@ namespace netCollections
         /// <returns>True if the key is present in the dictionary.</returns>
         public virtual bool ContainsKey(TKey key)
         {
-            return TryEnumerateValuesForKey(key, out IEnumerator<TValue> values);
+            return TryEnumerateValuesForKey(key, out _);
         }
 
         /// <summary>

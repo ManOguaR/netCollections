@@ -15,7 +15,7 @@
 
 using System.Collections;
 
-namespace System.Utils.Sorting
+namespace netCollections.Sorting
 {
     /// <summary>
     /// Representa una estructura para la reordenacion rapida del contenido de un objeto derivado de netCollections.IList

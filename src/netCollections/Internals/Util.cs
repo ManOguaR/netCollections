@@ -1,7 +1,6 @@
-using netCollections;
 using System.Collections;
 
-namespace System.Internals
+namespace netCollections
 {
     /// <summary>
     /// A holder class for various internal utility functions that need to be shared.

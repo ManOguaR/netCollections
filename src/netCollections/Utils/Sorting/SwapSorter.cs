@@ -2,7 +2,7 @@
 // File:     SwapSorter.cs
 //*************************************************************************************
 // Description: Encapsula una estructura para la reordenacion por intercambio de un
-//              objeto derivado de netCollections.IList
+//              objeto derivado de System.Collections.IList
 //*************************************************************************************
 // Classes:      SwapSorter : ISorter
 //*************************************************************************************
@@ -11,10 +11,10 @@
 
 using System.Collections;
 
-namespace System.Utils.Sorting
+namespace netCollections.Sorting
 {
     /// <summary>
-    /// Representa una estructura para la reordenacion por intercambio de un objeto derivado de netCollections.IList
+    /// Representa una estructura para la reordenacion por intercambio de un objeto derivado de <see cref="IList"/>
     /// </summary>
     public abstract class SwapSorter : ISorter
     {
@@ -69,7 +69,7 @@ namespace System.Utils.Sorting
         }
 
         /// <summary>
-        /// Ordena los valores contenidos en <see cref="list"/> segun los criterios proporcionados por comparador e intercambiador.
+        /// Ordena los valores contenidos en <paramref name="list"/> segun los criterios proporcionados por comparador e intercambiador.
         /// </summary>
         /// <param name="list">Un objeto derivado de netCollections.IList que contiene los valores a ordenar.</param>
 		public abstract void Sort(IList list);

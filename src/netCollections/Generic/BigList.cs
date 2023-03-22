@@ -1,25 +1,24 @@
 ﻿using System.Diagnostics;
-using System.Internals;
 
 // CONSIDER: provide more efficient implementation of CopyTo.
 
 namespace netCollections.Generic
 {
     /// <summary>
-    /// <see cref="BigList{T}"/> provides a list of items, in order, with indices of the items ranging from 0 to one less
-    /// than the count of items in the collection. <see cref="BigList{T}"/> is optimized for efficient operations on large (&gt;100 items)
+    /// BigList&lt;T&gt; provides a list of items, in order, with indices of the items ranging from 0 to one less
+    /// than the count of items in the collection. BigList&lt;T&gt; is optimized for efficient operations on large (&gt;100 items)
     /// lists, especially for insertions, deletions, copies, and concatinations.
     /// </summary>
     /// <remarks>
-    /// <para><see cref="BigList{T}"/> class is similar in functionality to the standard <see cref="List{T}"/> class. Both classes
+    /// <para>BigList&lt;T&gt; class is similar in functionality to the standard <see cref="List{T}"/> class. Both classes
     /// provide a collection that stores an set of items in order, with indices of the items ranging from 0 to one less
     /// than the count of items in the collection. Both classes provide the ability to add and remove items from any index,
     /// and the get or set the item at any index.</para> 
-    /// <para><see cref="BigList{T}"/> differs significantly from <see cref="List{T}"/> in the performance of various operations, 
+    /// <para>BigList&lt;T&gt; differs significantly from <see cref="List{T}"/> in the performance of various operations, 
     /// especially when the lists become large (several hundred items or more). With <see cref="List{T}"/>, inserting or removing
     /// elements from anywhere in a large list except the end is very inefficient -- every item after the point of inserting
-    /// or deletion has to be moved in the list. The <see cref="BigList{T}"/> class, however, allows for fast insertions
-    /// and deletions anywhere in the list. Furthermore, <see cref="BigList{T}"/> allows copies of a list, sub-parts
+    /// or deletion has to be moved in the list. The BigList&lt;T&gt; class, however, allows for fast insertions
+    /// and deletions anywhere in the list. Furthermore, BigList&lt;T&gt; allows copies of a list, sub-parts
     /// of a list, and concatinations of two lists to be very fast. When a copy is made of part or all of a BigList,
     /// two lists shared storage for the parts of the lists that are the same. Only when one of the lists is changed is additional
     /// memory allocated to store the distinct parts of the lists.</para>
@@ -973,7 +972,7 @@ namespace netCollections.Generic
 #pragma warning disable IDE0059 // Asignación innecesaria de un valor
                         current = parent;
 #pragma warning restore IDE0059 // Asignación innecesaria de un valor
-                               // And keep going up...
+                        // And keep going up...
                     }
 
                     // current is now a new node we need to visit. Loop around to get it.

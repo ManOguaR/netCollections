@@ -8,10 +8,9 @@
 // Author:      http://www.codeproject.com/csharp/csquicksort.asp
 //*************************************************************************************
 
-using netCollections;
 using System.Collections;
 
-namespace System.Utils.Sorting
+namespace netCollections.Sorting
 {
     public interface ISorter
     {

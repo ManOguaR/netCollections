@@ -18,7 +18,7 @@
 // Author:      ManOguaR
 //*************************************************************************************
 
-namespace System.Utils.Tools
+namespace netCollections.Utils
 {
     /// <summary>
     /// Encapsulates a static pseudorandom number generator.

@@ -1,9 +1,8 @@
-﻿using netCollections;
-using System.Collections;
+﻿using System.Collections;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace System.Internals
+namespace netCollections
 {
     /// <summary>
     /// The base implementation for various collections classes that use hash tables
@@ -14,7 +13,7 @@ namespace System.Internals
     /// <remarks>
     /// The Hash manages items of type T, and uses a IComparer{ItemTYpe} that
     /// hashes compares items to hash items into the table.  
-    ///</remarks>
+    /// </remarks>
     [Serializable]
     internal class Hash<T> : IEnumerable<T>, ISerializable, IDeserializationCallback
     {

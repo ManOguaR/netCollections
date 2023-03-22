@@ -1,9 +1,8 @@
 ﻿using netCollections.Generic;
+using netCollections.Utils;
 using System.Collections;
 using System.Diagnostics;
-using System.Internals;
 using System.Runtime.CompilerServices;
-using System.Utils.Tools;
 
 namespace netCollections
 {

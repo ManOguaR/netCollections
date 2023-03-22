@@ -7,10 +7,6 @@
     [Serializable]
     public struct Triple<TFirst, TSecond, TThird> : IComparable, IComparable<Triple<TFirst, TSecond, TThird>>
     {
-        /// <summary>
-        /// Comparers for the first and second type that are used to compare
-        /// values.
-        /// </summary>
         private static readonly IComparer<TFirst> firstComparer = Comparer<TFirst>.Default;
         private static readonly IComparer<TSecond> secondComparer = Comparer<TSecond>.Default;
         private static readonly IComparer<TThird> thirdComparer = Comparer<TThird>.Default;

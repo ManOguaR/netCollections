@@ -10,7 +10,7 @@
 
 using System.Collections;
 
-namespace System.Utils.Sorting
+namespace netCollections.Sorting
 {
     /// <summary>
     /// Interface que define metodos para la representacion de un intercambiador.

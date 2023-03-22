@@ -1,29 +1,25 @@
 ﻿// CONSIDER: always create a small initial buffer, so that the checks in Add for a null buffer aren't needed. This 
 // would improve performance slightly, but make empty Deque's take more memory. 
 
-using System.Internals;
-
 namespace netCollections.Generic
 {
     /// <summary>
-    /// <para>The Deque class implements a type of list known as a Double Ended Queue. A Deque
-    /// is quite similar to a List, in that items have indices (starting at 0), and the item at any
-    /// index can be efficiently retrieved. The difference between a List and a Deque lies in the
-    /// efficiency of inserting elements at the beginning. In a List, items can be efficiently added
-    /// to the end, but inserting an item at the beginning of the List is slow, taking time 
-    /// proportional to the size of the List. In a Deque, items can be added to the beginning 
-    /// or end equally efficiently, regardless of the number of items in the Deque. As a trade-off
-    /// for this increased flexibility, Deque is somewhat slower than List (but still constant time) when
-    /// being indexed to get or retrieve elements. </para>
+    /// The Deque&lt;T&gt; class implements a type of list known as a Double Ended Queue. A Deque&lt;T&gt; is quite similar
+    /// to a <see cref="List{T}"/>, in that items have indices (starting at 0), and the item at any index can be efficiently
+    /// retrieved. The difference between a <see cref="List{T}"/> and a Deque&lt;T&gt; lies in the efficiency of inserting
+    /// elements at the beginning. In a <see cref="List{T}"/>, items can be efficiently added to the end, but inserting an
+    /// item at the beginning of the <see cref="List{T}"/> is slow, taking time proportional to the size of the <see cref="List{T}"/>.
+    /// In a Deque&lt;T&gt;, items can be added to the beginning or end equally efficiently, regardless of the number of
+    /// items in the Deque&lt;T&gt;. As a trade-off for this increased flexibility, Deque&lt;T&gt; is somewhat slower than
+    /// <see cref="List{T}"/> (but still constant time) when being indexed to get or retrieve elements.
     /// </summary>
     /// <remarks>
-    /// <para>The Deque class can also be used as a more flexible alternative to the Queue 
-    /// and Stack classes. Deque is as efficient as Queue and Stack for adding or removing items, 
-    /// but is more flexible: it allows access
-    /// to all items in the queue, and allows adding or removing from either end.</para>
-    /// <para>Deque is implemented as a ring buffer, which is grown as necessary. The size
-    /// of the buffer is doubled whenever the existing capacity is too small to hold all the
-    /// elements.</para>
+    /// <para>The Deque&lt;T&gt; class can also be used as a more flexible alternative to the <see cref="Queue{T}"/> and
+    /// <see cref="Stack{T}"/> classes. Deque&lt;T&gt; is as efficient as <see cref="Queue{T}"/> and <see cref="Stack{T}"/>
+    /// for adding or removing items, but is more flexible: it allows access to all items in the queue, and allows adding
+    /// or removing from either end.</para>
+    /// <para>Deque&lt;T&gt; is implemented as a ring buffer, which is grown as necessary. The size of the buffer is doubled
+    /// whenever the existing capacity is too small to hold all the elements.</para>
     /// </remarks>
     /// <typeparam name="T">The type of items stored in the Deque.</typeparam>
     [Serializable]

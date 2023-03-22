@@ -1,6 +1,4 @@
-﻿using System.Internals;
-
-namespace netCollections.Sorted
+﻿namespace netCollections.Sorted
 {
     /// <summary>
     /// <see cref="OrderedSet{T}"/> is a collection that contains items of type T. 
@@ -14,10 +12,10 @@ namespace netCollections.Sorted
     /// function can be passed in either as a delegate, or as an instance of IComparer{TKey}.</p>
     /// <p>OrderedSet is implemented as a balanced binary tree. Inserting, deleting, and looking up an
     /// an element all are done in log(N) type, where N is the number of keys in the tree.</p>
-    /// <p><see cref="<see cref="Set{T}"/> is similar, but uses hashing instead of comparison, and does not maintain
+    /// <p><see cref="Set{T}"/> is similar, but uses hashing instead of comparison, and does not maintain
     /// the items in sorted order.</p>
-    ///</remarks>
-    ///<seealso cref="<see cref="Set{T}"/>
+    /// </remarks>
+    /// <seealso cref="<see cref="Set{T}"/>
     [Serializable]
     public class OrderedSet<T> : CollectionBase<T>, ICollection<T>, ICloneable
     {
@@ -34,9 +32,9 @@ namespace netCollections.Sorted
         /// or IComparable. 
         /// The CompareTo method of this interface will be used to compare items in this set.
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted, and will be sorted before all other items.
-        ///</remarks>
+        /// </remarks>
         /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedSet() :
             this(Comparers.DefaultComparer<T>())
@@ -73,9 +71,9 @@ namespace netCollections.Sorted
         /// The CompareTo method of this interface will be used to compare items in this set. The set is
         /// initialized with all the items in the given collection.
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted, and will be sorted before all other items.
-        ///</remarks>
+        /// </remarks>
         /// <param name="collection">A collection with items to be placed into the OrderedSet.</param>
         /// <exception cref="InvalidOperationException">T does not implement <see cref="IComparable{TKey}"/>.</exception>
         public OrderedSet(IEnumerable<T> collection) :
@@ -1059,17 +1057,17 @@ namespace netCollections.Sorted
         /// Returns a View collection that can be used for enumerating the items in the set in 
         /// reversed order.
         /// </summary>
-        ///<remarks>
-        ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
-        ///<code>
+        /// <remarks>
+        /// <p>Typically, this method is used in conjunction with a foreach statement. For example:
+        /// <code>
         /// foreach(T item in set.Reversed()) {
         ///    // process item
         /// }
-        ///</code></p>
+        /// </code></p>
         /// <p>If an item is added to or deleted from the set while the View is being enumerated, then 
         /// the enumeration will end with an InvalidOperationException.</p>
-        ///<p>Calling Reverse does not copy the data in the tree, and the operation takes constant time.</p>
-        ///</remarks>
+        /// <p>Calling Reverse does not copy the data in the tree, and the operation takes constant time.</p>
+        /// </remarks>
         /// <returns>An OrderedSet.View of items in reverse order.</returns>
         public View Reversed()   // A reversed view that can be enumerated
         {
@@ -1083,18 +1081,18 @@ namespace netCollections.Sorted
         /// Items equal to the end points of the range can be included or excluded depending on the
         /// <paramref name="fromInclusive"/> and <paramref name="toInclusive"/> parameters.
         /// </summary>
-        ///<remarks>
-        ///<p>If <paramref name="from"/> is greater than <paramref name="to"/>, the returned collection is empty. </p>
-        ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
-        ///<code>
+        /// <remarks>
+        /// <p>If <paramref name="from"/> is greater than <paramref name="to"/>, the returned collection is empty. </p>
+        /// <p>Typically, this method is used in conjunction with a foreach statement. For example:
+        /// <code>
         /// foreach(T item in set.Range(from, true, to, false)) {
         ///    // process item
         /// }
-        ///</code></p>
+        /// </code></p>
         /// <p>If an item is added to or deleted from the set while the View is being enumerated, then 
         /// the enumeration will end with an InvalidOperationException.</p>
-        ///<p>Calling Range does not copy the data in the tree, and the operation takes constant time.</p>
-        ///</remarks>
+        /// <p>Calling Range does not copy the data in the tree, and the operation takes constant time.</p>
+        /// </remarks>
         /// <param name="from">The lower bound of the range.</param>
         /// <param name="fromInclusive">If true, the lower bound is inclusive--items equal to the lower bound will
         /// be included in the range. If false, the lower bound is exclusive--items equal to the lower bound will not
@@ -1115,17 +1113,17 @@ namespace netCollections.Sorted
         /// The items are enumerated in sorted order. Items equal to <paramref name="from"/> can be included
         /// or excluded depending on the <paramref name="fromInclusive"/> parameter.
         /// </summary>
-        ///<remarks>
-        ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
-        ///<code>
+        /// <remarks>
+        /// <p>Typically, this method is used in conjunction with a foreach statement. For example:
+        /// <code>
         /// foreach(T item in set.RangeFrom(from, true)) {
         ///    // process item
         /// }
-        ///</code></p>
+        /// </code></p>
         /// <p>If an item is added to or deleted from the set while the View is being enumerated, then 
         /// the enumeration will end with an InvalidOperationException.</p>
-        ///<p>Calling RangeFrom does not copy the data in the tree, and the operation takes constant time.</p>
-        ///</remarks>
+        /// <p>Calling RangeFrom does not copy the data in the tree, and the operation takes constant time.</p>
+        /// </remarks>
         /// <param name="from">The lower bound of the range.</param>
         /// <param name="fromInclusive">If true, the lower bound is inclusive--items equal to the lower bound will
         /// be included in the range. If false, the lower bound is exclusive--items equal to the lower bound will not
@@ -1142,17 +1140,17 @@ namespace netCollections.Sorted
         /// The items are enumerated in sorted order. Items equal to <paramref name="to"/> can be included
         /// or excluded depending on the <paramref name="toInclusive"/> parameter.
         /// </summary>
-        ///<remarks>
-        ///<p>Typically, this method is used in conjunction with a foreach statement. For example:
-        ///<code>
+        /// <remarks>
+        /// <p>Typically, this method is used in conjunction with a foreach statement. For example:
+        /// <code>
         /// foreach(T item in set.RangeTo(to, false)) {
         ///    // process item
         /// }
-        ///</code></p>
+        /// </code></p>
         /// <p>If an item is added to or deleted from the set while the View is being enumerated, then 
         /// the enumeration will end with an InvalidOperationException.</p>
-        ///<p>Calling RangeTo does not copy the data in the tree, and the operation takes constant time.</p>
-        ///</remarks>
+        /// <p>Calling RangeTo does not copy the data in the tree, and the operation takes constant time.</p>
+        /// </remarks>
         /// <param name="to">The upper bound of the range. </param>
         /// <param name="toInclusive">If true, the upper bound is inclusive--items equal to the upper bound will
         /// be included in the range. If false, the upper bound is exclusive--items equal to the upper bound will not
@@ -1171,17 +1169,17 @@ namespace netCollections.Sorted
         /// The <see cref="OrderedSet{T}.View"/> class is used to look at a subset of the Items
         /// inside an ordered set. It is returned from the Range, RangeTo, RangeFrom, and Reversed methods. 
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// <p>Views are dynamic. If the underlying set changes, the view changes in sync. If a change is made
         /// to the view, the underlying set changes accordingly.</p>
-        ///<p>Typically, this class is used in conjunction with a foreach statement to enumerate the items 
+        /// <p>Typically, this class is used in conjunction with a foreach statement to enumerate the items 
         /// in a subset of the OrderedSet. For example:</p>
-        ///<code>
+        /// <code>
         /// foreach(T item in set.Range(from, to)) {
         ///    // process item
         /// }
-        ///</code>
-        ///</remarks>
+        /// </code>
+        /// </remarks>
         [Serializable]
         public class View : CollectionBase<T>, ICollection<T>
         {

@@ -1,22 +1,23 @@
-﻿using System.Internals;
+﻿using netCollections.Sorted;
 
 namespace netCollections.Generic
 {
     /// <summary>
-    /// <see cref="Set{T}"/> is a collection that contains items of type T. 
+    /// Set&lt;T&gt; is a collection that contains items of type T. 
     /// The item are maintained in a haphazard, unpredictable order, and duplicate items are not allowed.
     /// </summary>
     /// <remarks>
-    /// <p>The items are compared in one of two ways. If T implements <see cref="IComparable{T}"/> 
+    /// <para>The items are compared in one of two ways. If T implements <see cref="IComparable{T}"/> 
     /// then the Equals method of that interface will be used to compare items, otherwise the Equals
     /// method from Object will be used. Alternatively, an instance of <see cref="IComparer{T}"/> can be passed
-    /// to the constructor to use to compare items.</p>
-    /// <p>Set is implemented as a hash table. Inserting, deleting, and looking up an
-    /// an element all are done in approximately constant time, regardless of the number of items in the Set.</p>
-    /// <p><see cref="<see cref="OrderedSet{T}"/> is similar, but uses comparison instead of hashing, and does maintains
-    /// the items in sorted order.</p>
-    ///</remarks>
-    ///<seealso cref="<see cref="OrderedSet{T}"/>
+    /// to the constructor to use to compare items.</para>
+    /// <para>Set is implemented as a hash table. Inserting, deleting, and looking up an
+    /// an element all are done in approximately constant time, regardless of the number of items in the Set.</para>
+    /// <para><see cref="OrderedSet{T}"/> is similar, but uses comparison instead of hashing, and does maintains
+    /// the items in sorted order.</para>
+    /// </remarks>
+    /// <typeparam name="T">The type of items to store in the Set.</typeparam>
+    /// <seealso cref="OrderedSet{T}"/>
     [Serializable]
     public class Set<T> : CollectionBase<T>, ICollection<T>, ICloneable
     {
@@ -32,9 +33,9 @@ namespace netCollections.Generic
         /// Creates a new Set. The Equals method and GetHashCode method on T
         /// will be used to compare items for equality.
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted, and will be sorted before all other items.
-        ///</remarks>
+        /// </remarks>
         public Set() :
             this(EqualityComparer<T>.Default)
         {
@@ -55,9 +56,9 @@ namespace netCollections.Generic
         /// Creates a new Set. The Equals method and GetHashCode method on T
         /// will be used to compare items for equality.
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted.
-        ///</remarks>
+        /// </remarks>
         /// <param name="collection">A collection with items to be placed into the Set.</param>
         public Set(IEnumerable<T> collection) :
             this(collection, EqualityComparer<T>.Default)

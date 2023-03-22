@@ -1,14 +1,4 @@
-﻿//******************************
-// Written by Peter Golde
-// Copyright (c) 2004-2007, Wintellect
-//
-// Use and restribution of this code is subject to the license agreement 
-// contained in the file "License.txt" accompanying this file.
-//******************************
-
-using netCollections;
-
-namespace System.Internals
+﻿namespace netCollections
 {
     /// <summary>
     /// A collection of methods to create IComparer and IEqualityComparer instances in various ways.

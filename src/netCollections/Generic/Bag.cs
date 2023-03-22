@@ -1,9 +1,9 @@
-﻿using System.Internals;
+﻿using netCollections.Sorted;
 
 namespace netCollections.Generic
 {
     /// <summary>
-    /// <see cref="Bag{T}"/> is a collection that contains items of type T. 
+    /// Bag&lt;T&gt; is a collection that contains items of type T. 
     /// Unlike a Set, duplicate items (items that compare equal to each other) are allowed in an Bag. 
     /// </summary>
     /// <remarks>
@@ -15,12 +15,12 @@ namespace netCollections.Generic
     /// an element all are done in approximately constant time, regardless of the number of items in the bag.</p>
     /// <p>When multiple equal items are stored in the bag, they are stored as a representative item and a count. 
     /// If equal items can be distinguished, this may be noticable. For example, if a case-insensitive
-    /// comparer is used with a Bag{string}, and both "hello", and "HELLO" are added to the bag, then the
+    /// comparer is used with a <see cref="Bag{string}"/>, and both "hello", and "HELLO" are added to the bag, then the
     /// bag will appear to contain two copies of "hello" (the representative item).</p>
-    /// <p><see cref="<see cref="OrderedBag{T}"/> is similar, but uses comparison instead of hashing, maintain
+    /// <p><see cref="OrderedBag{T}"/> is similar, but uses comparison instead of hashing, maintain
     /// the items in sorted order, and stores distinct copies of items that compare equal.</p>
-    ///</remarks>
-    ///<seealso cref="<see cref="OrderedBag{T}"/>
+    /// </remarks>
+    /// <seealso cref="OrderedBag{T}"/>
     [Serializable]
     public class Bag<T> : CollectionBase<T>, ICloneable
     {
@@ -65,9 +65,9 @@ namespace netCollections.Generic
         /// <summary>
         /// Creates a new Bag. 
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted.
-        ///</remarks>
+        /// </remarks>
         public Bag() :
             this(EqualityComparer<T>.Default)
         {
@@ -89,9 +89,9 @@ namespace netCollections.Generic
         /// Creates a new Bag. The bag is
         /// initialized with all the items in the given collection.
         /// </summary>
-        ///<remarks>
+        /// <remarks>
         /// Items that are null are permitted.
-        ///</remarks>
+        /// </remarks>
         /// <param name="collection">A collection with items to be placed into the Bag.</param>
         public Bag(IEnumerable<T> collection) :
             this(collection, EqualityComparer<T>.Default)

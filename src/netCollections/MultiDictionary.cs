@@ -1,6 +1,4 @@
-﻿using System.Internals;
-
-namespace netCollections
+﻿namespace netCollections
 {
     /// <summary>
     /// <para>The MultiDictionary class that associates values with a key. Unlike an Dictionary,
@@ -11,8 +9,8 @@ namespace netCollections
     /// </summary>
     /// <typeparam name="TKey">The type of the keys.</typeparam>
     /// <typeparam name="TValue">The of values associated with the keys.</typeparam>
-    ///<seealso cref="Dictionary{TKey,TValue}"/>
-    ///<seealso cref="OrderedMultiDictionary{TKey,TValue}"/>
+    /// <seealso cref="Dictionary{TKey,TValue}"/>
+    /// <seealso cref="OrderedMultiDictionary{TKey,TValue}"/>
     [Serializable]
     public class MultiDictionary<TKey, TValue> : MultiDictionaryBase<TKey, TValue>, ICloneable
     {

@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-using System.Internals;
 
 namespace netCollections
 {
@@ -16,8 +15,7 @@ namespace netCollections
     /// <typeparam name="TValue">The value type of the dictionary.</typeparam>
     [Serializable]
     [DebuggerDisplay("{DebuggerDisplayString()}")]
-    public abstract class ReadOnlyDictionaryBase<TKey, TValue> : ReadOnlyCollectionBase<KeyValuePair<TKey, TValue>>,
-                                                                                                  IDictionary<TKey, TValue>, IDictionary
+    public abstract class ReadOnlyDictionaryBase<TKey, TValue> : ReadOnlyCollectionBase<KeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>, IDictionary
     {
 
         /// <summary>
